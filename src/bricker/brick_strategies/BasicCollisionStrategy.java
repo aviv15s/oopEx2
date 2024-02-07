@@ -1,4 +1,4 @@
-package bricker.brick_strategies;
+package src.bricker.brick_strategies;
 
 public class BasicCollisionStrategy {
 }
