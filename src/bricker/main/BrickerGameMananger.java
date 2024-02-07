@@ -2,6 +2,7 @@ package src.bricker.main;
 
 import danogl.GameManager;//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 import danogl.GameObject;
+import danogl.components.CoordinateSpace;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
@@ -53,25 +54,34 @@ public class BrickerGameMananger extends GameManager {
 
         // initialize the walls colliders
         initializeWalls(windowDimensions);
+
+        Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg", false);
+        initializeBackground(windowDimensions, backgroundImage);
     }
 
     private void initializeWalls(Vector2 windowDimensions){
-
-        //wall
-        GameObject wallLeft = new GameObject(Vector2.ZERO,
+        GameObject wallLeft = new GameObject(new Vector2(-WALL_THICKNESS, 0),
                 new Vector2(WALL_THICKNESS, windowDimensions.y()),
-                new RectangleRenderable(Color.CYAN));
+                null);
         gameObjects().addGameObject(wallLeft);
 
         GameObject wallUp = new GameObject(Vector2.ZERO,
                 new Vector2(windowDimensions.x(), WALL_THICKNESS),
-                new RectangleRenderable(Color.CYAN));
+                null);
         gameObjects().addGameObject(wallUp);
 
         GameObject wallRight = new GameObject(new Vector2(windowDimensions.x(), 0),
                 new Vector2(WALL_THICKNESS, windowDimensions.x()),
-                new RectangleRenderable(Color.CYAN));
+                null);
         gameObjects().addGameObject(wallRight);
+    }
+
+    private void initializeBackground(Vector2 windowDimensions, Renderable backgroundImage){
+        GameObject background = new GameObject(Vector2.ZERO,
+                windowDimensions,
+                backgroundImage);
+        gameObjects().addGameObject(background, -200);
+        background.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
     }
 
 //    public void update(float deltaTime){
