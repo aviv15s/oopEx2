@@ -1,22 +1,20 @@
-package src.bricker.main;
+package bricker.main;
 
+import bricker.gameobjects.Paddle;
 import danogl.GameManager;//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 import danogl.GameObject;
 import danogl.components.CoordinateSpace;
-import danogl.gui.ImageReader;
-import danogl.gui.SoundReader;
-import danogl.gui.UserInputListener;
-import danogl.gui.WindowController;
-import danogl.gui.rendering.RectangleRenderable;
+import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import src.bricker.gameobjects.Ball;
+import bricker.gameobjects.Ball;
 
-import java.awt.*;
+import java.util.Random;
 
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class BrickerGameMananger extends GameManager {
     private final int WALL_THICKNESS = 2;
+    private final int BALL_SPEED = 250;
     public BrickerGameMananger() {
     }
 
@@ -34,10 +32,20 @@ public class BrickerGameMananger extends GameManager {
         Renderable ballImage = imageReader.readImage("assets/ball.png",
                 true);
 
+        Sound collsiomSound = soundReader.readSound("assets/blop_cut_silenced.wav");
         GameObject ball = new Ball(Vector2.ZERO,
                 new Vector2(50,50),
-                ballImage);
-        ball.setVelocity(Vector2.DOWN.mult(100));
+                ballImage, collsiomSound);
+        float ballVelX = BALL_SPEED;
+        float ballVelY = BALL_SPEED;
+        Random rand = new Random();
+        if(rand.nextBoolean()){
+            ballVelX *= -1;
+        }
+        if(rand.nextBoolean()){
+            ballVelY *= -1;
+        }
+        ball.setVelocity(new Vector2(ballVelX, ballVelY));
         Vector2 windowDimensions = windowController.getWindowDimensions();
         ball.setCenter(windowDimensions.mult(0.5f));
         gameObjects().addGameObject(ball);
@@ -45,9 +53,9 @@ public class BrickerGameMananger extends GameManager {
         //paddle
         Renderable paddleImage = imageReader.readImage("assets/paddle.png",
                 true);
-        GameObject paddle = new GameObject(Vector2.ZERO,
+        GameObject paddle = new Paddle(Vector2.ZERO,
                 new Vector2(200, 20),
-                paddleImage);
+                paddleImage, inputListener);
         paddle.setCenter(new Vector2(windowDimensions.x() * 0.5f,
                 windowDimensions.y() - 30));
         gameObjects().addGameObject(paddle);
