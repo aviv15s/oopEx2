@@ -19,6 +19,7 @@ import src.bricker.gameobjects.GameWrapper;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class BrickerGameMananger extends GameManager {
     private final int WALL_THICKNESS = 2;
+    private int numberOfRows, bricksPerRow;
     public BrickerGameMananger() {
     }
 
@@ -26,8 +27,10 @@ public class BrickerGameMananger extends GameManager {
         super(windowTitle);
     }
 
-    public BrickerGameMananger(String windowTitle, Vector2 windowDimensions) {
+    public BrickerGameMananger(String windowTitle, Vector2 windowDimensions, int numberOfRows, int bricksPerRow) {
         super(windowTitle, windowDimensions);
+        this.numberOfRows = numberOfRows;
+        this.bricksPerRow = bricksPerRow;
     }
 
     @Override
@@ -61,7 +64,7 @@ public class BrickerGameMananger extends GameManager {
         GameWrapper gameWrapper = new GameWrapper();
         gameWrapper.initializeBackground(gameObjects(), windowDimensions, backgroundImage);
 
-        initializeBricks(imageReader, windowDimensions, 5, 8);
+        initializeBricks(imageReader, windowDimensions, numberOfRows, bricksPerRow);
 
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.STATIC_OBJECTS, false);
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.DEFAULT, true);
@@ -110,8 +113,15 @@ public class BrickerGameMananger extends GameManager {
 //        String s = "hi";
 //    }
     public static void main(String[] args) {
+        int numberOfRows = 7, bricksPerRow = 8;
+        if (args.length >= 1){
+            bricksPerRow = Integer.parseInt(args[0]);
+        }
+        if (args.length >= 2){
+            numberOfRows = Integer.parseInt(args[1]);
+        }
         BrickerGameMananger brickerGameManager = new BrickerGameMananger("Bouncing Ball",
-                new Vector2(700,500));
+                new Vector2(700,500), numberOfRows, bricksPerRow);
         brickerGameManager.run();
     }
 
