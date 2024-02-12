@@ -2,12 +2,11 @@ package src.bricker.main;
 
 import danogl.GameManager;//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 import danogl.GameObject;
-import danogl.components.CoordinateSpace;
+import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
-import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import src.bricker.brick_strategies.BasicCollisionStrategy;
@@ -16,7 +15,6 @@ import src.bricker.gameobjects.Ball;
 import src.bricker.gameobjects.Brick;
 import src.bricker.gameobjects.GameWrapper;
 
-import java.awt.*;
 
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class BrickerGameMananger extends GameManager {
@@ -63,33 +61,48 @@ public class BrickerGameMananger extends GameManager {
         GameWrapper gameWrapper = new GameWrapper();
         gameWrapper.initializeBackground(gameObjects(), windowDimensions, backgroundImage);
 
-        CollsionStrategy collsionStrategy = new BasicCollisionStrategy(this);
-        Renderable brickImage = imageReader.readImage("assets/brick.png",
-                true);
-        GameObject brick = new Brick(Vector2.ZERO,
-                new Vector2(windowDimensions.x(), 15),
-                brickImage,
-                collsionStrategy);
-        brick.setCenter(new Vector2(windowDimensions.x() * 0.5f,
-                100));
-        gameObjects().addGameObject(brick);
+        initializeBricks(imageReader, windowDimensions, 5, 8);
+
+        gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.STATIC_OBJECTS, false);
+        gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.DEFAULT, true);
     }
 
     private void initializeWalls(Vector2 windowDimensions){
         GameObject wallLeft = new GameObject(new Vector2(-WALL_THICKNESS, 0),
                 new Vector2(WALL_THICKNESS, windowDimensions.y()),
                 null);
-        gameObjects().addGameObject(wallLeft);
+        gameObjects().addGameObject(wallLeft, Layer.STATIC_OBJECTS);
 
         GameObject wallUp = new GameObject(Vector2.ZERO,
                 new Vector2(windowDimensions.x(), WALL_THICKNESS),
                 null);
-        gameObjects().addGameObject(wallUp);
+        gameObjects().addGameObject(wallUp, Layer.STATIC_OBJECTS);
 
         GameObject wallRight = new GameObject(new Vector2(windowDimensions.x(), 0),
                 new Vector2(WALL_THICKNESS, windowDimensions.x()),
                 null);
-        gameObjects().addGameObject(wallRight);
+        gameObjects().addGameObject(wallRight, Layer.STATIC_OBJECTS);
+    }
+
+    private void initializeBricks(ImageReader imageReader, Vector2 windowDimensions, int numberOfRows, int bricksPerRow){
+        CollsionStrategy collsionStrategy = new BasicCollisionStrategy(this);
+        Renderable brickImage = imageReader.readImage("assets/brick.png", true);
+
+        int brickWidth = (int) windowDimensions.x() / bricksPerRow;
+        int brickHeight = 15;
+
+        for (int i = 0; i < numberOfRows; i++) {
+            for (int j = 0; j <bricksPerRow; j++) {
+                Vector2 brickLocation = new Vector2(brickWidth * j, brickHeight * i);
+                GameObject brick = new Brick(brickLocation,
+                        new Vector2(brickWidth, brickHeight),
+                        brickImage,
+                        collsionStrategy);
+                gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
+            }
+        }
+
+
     }
 
 
@@ -102,7 +115,7 @@ public class BrickerGameMananger extends GameManager {
         brickerGameManager.run();
     }
 
-    public boolean removeGameObject(GameObject gameObject){
-        return gameObjects().removeGameObject(gameObject);
+    public boolean removeGameObject(GameObject gameObject, int layerId){
+        return gameObjects().removeGameObject(gameObject, layerId);
     }
 }
