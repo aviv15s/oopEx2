@@ -26,6 +26,7 @@ public class BrickerGameMananger extends GameManager {
     private final int WALL_THICKNESS = 2;
     private final int BALL_SPEED = 250;
     private int numberOfRows, bricksPerRow;
+    public final int BRICKS_LAYER = Layer.STATIC_OBJECTS;
     public BrickerGameMananger() {
     }
 

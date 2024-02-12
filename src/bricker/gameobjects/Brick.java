@@ -2,6 +2,7 @@ package bricker.gameobjects;
 
 import danogl.GameObject;
 import danogl.collisions.Collision;
+import danogl.collisions.Layer;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import bricker.brick_strategies.CollsionStrategy;
