@@ -10,7 +10,10 @@ import danogl.gui.WindowController;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import src.bricker.brick_strategies.BasicCollisionStrategy;
+import src.bricker.brick_strategies.CollsionStrategy;
 import src.bricker.gameobjects.Ball;
+import src.bricker.gameobjects.Brick;
 import src.bricker.gameobjects.GameWrapper;
 
 import java.awt.*;
@@ -59,6 +62,17 @@ public class BrickerGameMananger extends GameManager {
         Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg", false);
         GameWrapper gameWrapper = new GameWrapper();
         gameWrapper.initializeBackground(gameObjects(), windowDimensions, backgroundImage);
+
+        CollsionStrategy collsionStrategy = new BasicCollisionStrategy(this);
+        Renderable brickImage = imageReader.readImage("assets/brick.png",
+                true);
+        GameObject brick = new Brick(Vector2.ZERO,
+                new Vector2(windowDimensions.x(), 15),
+                brickImage,
+                collsionStrategy);
+        brick.setCenter(new Vector2(windowDimensions.x() * 0.5f,
+                100));
+        gameObjects().addGameObject(brick);
     }
 
     private void initializeWalls(Vector2 windowDimensions){
@@ -86,5 +100,9 @@ public class BrickerGameMananger extends GameManager {
         BrickerGameMananger brickerGameManager = new BrickerGameMananger("Bouncing Ball",
                 new Vector2(700,500));
         brickerGameManager.run();
+    }
+
+    public boolean removeGameObject(GameObject gameObject){
+        return gameObjects().removeGameObject(gameObject);
     }
 }
