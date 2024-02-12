@@ -1,5 +1,6 @@
 package bricker.main;
 
+import bricker.gameobjects.Graphics;
 import bricker.gameobjects.Paddle;
 import danogl.GameManager;//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 import danogl.GameObject;
@@ -19,6 +20,7 @@ import bricker.gameobjects.Ball;
 import bricker.gameobjects.Brick;
 import bricker.gameobjects.GameWrapper;
 
+import java.awt.*;
 import java.util.Random;
 
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
