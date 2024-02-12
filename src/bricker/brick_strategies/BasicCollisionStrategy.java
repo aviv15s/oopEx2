@@ -2,7 +2,7 @@ package bricker.brick_strategies;
 
 import danogl.GameObject;
 import danogl.collisions.Layer;
-import src.bricker.main.BrickerGameMananger;
+import bricker.main.BrickerGameMananger;
 
 public class BasicCollisionStrategy implements CollsionStrategy{
     private BrickerGameMananger gameMananger;

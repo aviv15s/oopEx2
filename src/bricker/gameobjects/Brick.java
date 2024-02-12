@@ -4,7 +4,7 @@ import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import src.bricker.brick_strategies.CollsionStrategy;
+import bricker.brick_strategies.CollsionStrategy;
 
 public class Brick extends GameObject{
     CollsionStrategy collsionStrategy;

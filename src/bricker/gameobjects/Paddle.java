@@ -29,7 +29,7 @@ public class Paddle  extends GameObject {
             }
         }
         if(inputListener.isKeyPressed(KeyEvent.VK_RIGHT)){
-            if(getTopLeftCorner().x()+ getDimensions().x()<){
+            if(getTopLeftCorner().x()+ getDimensions().x()<1){
                 movementDir = movementDir.add(Vector2.RIGHT);
             }
         }
