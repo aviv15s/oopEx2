@@ -1,0 +1,13 @@
+aviv.shemesh, ram3108_
+213847015, 213809957
+
+Bricks:
+XCollisionStrategy - each one implements CollisionStrategy and is a different type of collision.
+BrickerGameManager:
+numPaddle - to know if need to be destroyed.
+Paddle:
+numHit -  num hit on.
+
+BrickCollisionStrategyFactory - generates the collision action based on the probabilities and has a method
+that returns array of collisionStrategies.
+
