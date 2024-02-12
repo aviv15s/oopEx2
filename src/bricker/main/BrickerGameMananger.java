@@ -1,10 +1,8 @@
 package bricker.main;
 
-import bricker.gameobjects.Graphics;
 import bricker.gameobjects.Paddle;
 import danogl.GameManager;//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 import danogl.GameObject;
-import danogl.components.CoordinateSpace;
 import danogl.gui.*;
 import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
@@ -16,19 +14,19 @@ import danogl.util.Vector2;
 import bricker.gameobjects.Ball;
 import bricker.brick_strategies.BasicCollisionStrategy;
 import bricker.brick_strategies.CollsionStrategy;
-import bricker.gameobjects.Ball;
 import bricker.gameobjects.Brick;
 import bricker.gameobjects.GameWrapper;
 
-import java.awt.*;
 import java.util.Random;
 
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class BrickerGameMananger extends GameManager {
     private final int WALL_THICKNESS = 2;
-    private final int BALL_SPEED = 250;
+    private final int BALL_SPEED = 100;
     private int numberOfRows, bricksPerRow;
     public final int BRICKS_LAYER = Layer.STATIC_OBJECTS;
+    private Vector2 windowDimensions;
+    private ImageSoundFactory imageSoundFactory;
     public BrickerGameMananger() {
     }
 
@@ -45,26 +43,9 @@ public class BrickerGameMananger extends GameManager {
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        Renderable ballImage = imageReader.readImage("assets/ball.png",
-                true);
 
-        Sound collsiomSound = soundReader.readSound("assets/blop_cut_silenced.wav");
-        GameObject ball = new Ball(Vector2.ZERO,
-                new Vector2(50,50),
-                ballImage, collsiomSound);
-        float ballVelX = BALL_SPEED;
-        float ballVelY = BALL_SPEED;
-        Random rand = new Random();
-        if(rand.nextBoolean()){
-            ballVelX *= -1;
-        }
-        if(rand.nextBoolean()){
-            ballVelY *= -1;
-        }
-        ball.setVelocity(new Vector2(ballVelX, ballVelY));
-        Vector2 windowDimensions = windowController.getWindowDimensions();
-        ball.setCenter(windowDimensions.mult(0.5f));
-        gameObjects().addGameObject(ball);
+        this.imageSoundFactory = new ImageSoundFactory(imageReader, soundReader);
+        this.windowDimensions = windowController.getWindowDimensions();
 
         //paddle
         Renderable paddleImage = imageReader.readImage("assets/paddle.png",
@@ -79,12 +60,11 @@ public class BrickerGameMananger extends GameManager {
         // initialize the walls colliders
         initializeWalls(windowDimensions);
 
-        Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg", false);
         GameWrapper gameWrapper = new GameWrapper();
-        gameWrapper.initializeBackground(gameObjects(), windowDimensions, backgroundImage);
+        gameWrapper.initializeBackground(gameObjects(), windowDimensions, imageSoundFactory.getImageObject(ImageType.BACKGROUND));
 
         initializeBricks(imageReader, windowDimensions, numberOfRows, bricksPerRow);
-
+        initializeBall();
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.STATIC_OBJECTS, false);
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.DEFAULT, true);
     }
@@ -123,8 +103,28 @@ public class BrickerGameMananger extends GameManager {
                 gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
             }
         }
+    }
 
-
+    private void initializeBall(){
+        GameObject ball = new Ball(
+                Vector2.ZERO,
+                new Vector2(50,50),
+                imageSoundFactory.getImageObject(ImageType.BALL),
+                imageSoundFactory.getSoundObject(SoundType.BLOP),
+                this
+        );
+        float ballVelX = BALL_SPEED;
+        float ballVelY = BALL_SPEED;
+        Random rand = new Random();
+        if(rand.nextBoolean()){
+            ballVelX *= -1;
+        }
+        if(rand.nextBoolean()){
+            ballVelY *= -1;
+        }
+        ball.setVelocity(new Vector2(ballVelX, ballVelY));
+        ball.setCenter(windowDimensions.mult(0.5f));
+        gameObjects().addGameObject(ball);
     }
 
 
@@ -146,5 +146,9 @@ public class BrickerGameMananger extends GameManager {
 
     public boolean removeGameObject(GameObject gameObject, int layerId){
         return gameObjects().removeGameObject(gameObject, layerId);
+    }
+
+    public Vector2 getWindowDimensions(){
+        return  windowDimensions;
     }
 }
