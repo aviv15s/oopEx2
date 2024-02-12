@@ -11,6 +11,7 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import src.bricker.gameobjects.Ball;
+import src.bricker.gameobjects.GameWrapper;
 
 import java.awt.*;
 
@@ -56,7 +57,8 @@ public class BrickerGameMananger extends GameManager {
         initializeWalls(windowDimensions);
 
         Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg", false);
-        initializeBackground(windowDimensions, backgroundImage);
+        GameWrapper gameWrapper = new GameWrapper();
+        gameWrapper.initializeBackground(gameObjects(), windowDimensions, backgroundImage);
     }
 
     private void initializeWalls(Vector2 windowDimensions){
@@ -76,13 +78,6 @@ public class BrickerGameMananger extends GameManager {
         gameObjects().addGameObject(wallRight);
     }
 
-    private void initializeBackground(Vector2 windowDimensions, Renderable backgroundImage){
-        GameObject background = new GameObject(Vector2.ZERO,
-                windowDimensions,
-                backgroundImage);
-        gameObjects().addGameObject(background, -200);
-        background.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-    }
 
 //    public void update(float deltaTime){
 //        String s = "hi";
