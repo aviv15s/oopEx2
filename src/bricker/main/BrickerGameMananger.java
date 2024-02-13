@@ -163,6 +163,8 @@ public class BrickerGameMananger extends GameManager {
                 imageSoundFactory.getSoundObject(SoundType.BLOP),
                 this
         );
+        puck.setCenter(center);
+        setObjectVelocityRandomDirection(puck,BALL_SPEED);
         gameObjects().addGameObject(puck);
         return puck;
     }

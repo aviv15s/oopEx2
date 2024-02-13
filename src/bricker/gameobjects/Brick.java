@@ -11,6 +11,7 @@ import bricker.brick_strategies.CollsionStrategy;
 
 public class Brick extends GameObject{
     private CollsionStrategy[] collsionStrategy;
+    private boolean isHit = false;
     private final BrickerGameMananger gameMananger;
     public Brick(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, CollsionStrategy collsionStrategy, BrickerGameMananger gameMananger) {
         super(topLeftCorner, dimensions, renderable);
@@ -24,11 +25,16 @@ public class Brick extends GameObject{
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
+        if(isHit){
+            return;
+        }
+        isHit = true;
         for (int i=0;i<collsionStrategy.length;i++){
             if(collsionStrategy[i] != null) {
                 collsionStrategy[i].onCollision(this, other);
             }
         }
+        gameMananger.removeGameObject(this, gameMananger.BRICKS_LAYER);
 
     }
 
