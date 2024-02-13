@@ -28,6 +28,5 @@ public class BallsCreatorCollisionStrategy implements CollsionStrategy{
     public void onCollision(GameObject gameObject1, GameObject gameObject2) {
         gameMananger.initializePuck(gameObject1.getCenter());
         gameMananger.initializePuck(gameObject1.getCenter());
-        gameMananger.removeGameObject(gameObject1, gameMananger.BRICKS_LAYER);
     }
 }

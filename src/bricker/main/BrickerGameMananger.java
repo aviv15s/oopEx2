@@ -19,8 +19,9 @@ import java.util.Vector;
 
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class BrickerGameMananger extends GameManager {
+    private int bricksRemaining;
     private final int WALL_THICKNESS = 2;
-    private final int BALL_SPEED = 200;
+    private final int BALL_SPEED = 250;
     private final Vector2 BALL_SIZE = new Vector2(50, 50);
     private final Vector2 PUCK_SIZE = BALL_SIZE.mult(0.75f);
     private final Vector2 PADDLE_SIZE = new Vector2(200,20);
@@ -81,6 +82,19 @@ public class BrickerGameMananger extends GameManager {
         object.setVelocity(velocity);
     }
 
+    private void setObjectVelocityRandomDiagonal(GameObject object, float speed){
+        Random random = new Random();
+        float speedOnEachAxis = speed / (float) Math.sqrt(2);
+        float velX = speedOnEachAxis, velY = speedOnEachAxis;
+        if (random.nextBoolean()){
+            velX *= -1;
+        }
+        if (random.nextBoolean()){
+            velY *= -1;
+        }
+        object.setVelocity(new Vector2(velX, velY));
+    }
+
     private Paddle initializePaddle(UserInputListener inputListener){
         Renderable paddleImage = imageSoundFactory.getImageObject(ImageType.PADDLE);
         Paddle paddle = new Paddle(
@@ -110,6 +124,7 @@ public class BrickerGameMananger extends GameManager {
     }
 
     private void initializeBricks(int numberOfRows, int bricksPerRow) {
+        bricksRemaining = numberOfRows * bricksPerRow;
         CollsionStrategy collsionStrategy = new BasicCollisionStrategy(this);
         Renderable brickImage = imageSoundFactory.getImageObject(ImageType.BRICK);
 
@@ -122,7 +137,7 @@ public class BrickerGameMananger extends GameManager {
                 GameObject brick = new Brick(brickLocation,
                         new Vector2(brickWidth, brickHeight),
                         brickImage,
-                        collsionStrategy);
+                        collsionStrategy,this);
                 gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
             }
         }
@@ -149,9 +164,15 @@ public class BrickerGameMananger extends GameManager {
                 this
         );
         gameObjects().addGameObject(puck);
-        puck.setCenter(center);
-        setObjectVelocityRandomDirection(puck,BALL_SPEED);
         return puck;
+    }
+
+    public void onBrickRemoved(){
+        bricksRemaining--;
+        if (bricksRemaining <= 0){
+            // TODO do something because the player WON!
+            System.out.println("Player WINSSSSSS");
+        }
     }
 
 

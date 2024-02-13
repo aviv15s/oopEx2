@@ -16,7 +16,7 @@ public class Brick extends GameObject{
         super(topLeftCorner, dimensions, renderable);
         this.gameMananger = gameMananger;
         CollisionStrategyFactory collisionStrategyFactory = new CollisionStrategyFactory();
-        this.collsionStrategy = collisionStrategyFactory.collisionStrategy(gameManager);
+        this.collsionStrategy = collisionStrategyFactory.collisionStrategy(this.gameMananger);
     }
 
 //delete me
