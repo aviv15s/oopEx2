@@ -5,5 +5,6 @@ public enum ImageType {
     PUCK,
     PADDLE,
     BRICK,
-    BACKGROUND
+    BACKGROUND,
+    HEART
 }

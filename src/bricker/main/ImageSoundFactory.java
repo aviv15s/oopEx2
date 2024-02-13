@@ -29,6 +29,8 @@ public class ImageSoundFactory {
                 return imageReader.readImage("assets/paddle.png", true);
             case BRICK:
                 return imageReader.readImage("assets/brick.png", true);
+            case HEART:
+                return imageReader.readImage("assets/heart.png", true);
             case BACKGROUND:
                 return imageReader.readImage("assets/DARK_BG2_small.jpeg", false);
         }

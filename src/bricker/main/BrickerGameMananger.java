@@ -71,6 +71,9 @@ public class BrickerGameMananger extends GameManager {
 
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.STATIC_OBJECTS, false);
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.DEFAULT, true);
+
+        Graphics graphics = new Graphics(windowController, imageSoundFactory, gameObjects());
+        graphics.initializeLifeCounter();
     }
 
     private void setObjectVelocityRandomDirection(GameObject object, float speed){
