@@ -33,16 +33,4 @@ public class Ball extends GameObject {
         return collisionCounter;
     }
 
-    public void onExitScreen(){
-        System.out.println("Ball Exited Screen!");
-        gameManager.removeGameObject(this, Layer.DEFAULT);
-    }
-
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-        if (getTopLeftCorner().y() > gameManager.getWindowDimensions().y()){
-            onExitScreen();
-        }
-    }
 }

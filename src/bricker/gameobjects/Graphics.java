@@ -1,6 +1,6 @@
 package bricker.gameobjects;
 
-import bricker.main.BrickerGameMananger;
+import bricker.main.BrickerGameManager;
 import bricker.main.ImageSoundFactory;
 import bricker.main.ImageType;
 import danogl.GameObject;
@@ -18,11 +18,9 @@ import java.awt.*;
 public class Graphics {
     private final int HEART_SIZE = 20;
     private final int MARGIN = 5;
-    private final int MAX_HEARTS = 4;
-    private final int INITIAL_HEARTS = 3;
     private final WindowController windowController;
     private final GameObjectCollection gameObjects;
-    private GameObject[] heartArray = new GameObject[MAX_HEARTS];
+    private GameObject[] heartArray;
     private TextRenderable textRenderable;
     private Renderable heartRenderable;
 
@@ -31,12 +29,14 @@ public class Graphics {
         this.windowController = windowController;
         heartRenderable = imageSoundFactory.getImageObject(ImageType.HEART);
         this.gameObjects = gameObjects;
+
+    }
+    public void initializeLifeCounter(int maxHearts, int initialHearts){
+        heartArray = new GameObject[maxHearts];
         for (int i = 0; i < heartArray.length; i++) {
             heartArray[i] = null;
         }
-    }
-    public void initializeLifeCounter(){
-        for (int i = 0; i < MAX_HEARTS; i++) {
+        for (int i = 0; i < heartArray.length; i++) {
             GameObject heart = new GameObject(
                     new Vector2((i+1) * (HEART_SIZE+MARGIN), windowController.getWindowDimensions().y() - MARGIN - HEART_SIZE),
                     new Vector2(HEART_SIZE, HEART_SIZE),
@@ -46,18 +46,18 @@ public class Graphics {
             heartArray[i] = heart;
         }
 
-        textRenderable = new TextRenderable(String.valueOf(INITIAL_HEARTS));
+        textRenderable = new TextRenderable(String.valueOf(initialHearts));
         textRenderable.setColor(Color.GREEN);
         GameObject gameObject = new GameObject(new Vector2(
                 MARGIN, windowController.getWindowDimensions().y()-HEART_SIZE-MARGIN
         ), Vector2.ONES.mult(HEART_SIZE), textRenderable);
         gameObjects.addGameObject(gameObject, Layer.FOREGROUND);
 
-        updateHeartCount(INITIAL_HEARTS);
+        updateHeartCount(initialHearts);
     }
 
     public void updateHeartCount(int heartCount){
-        for (int i = 0; i < MAX_HEARTS; i++) {
+        for (int i = 0; i < heartArray.length; i++) {
             if (i < heartCount){
                 heartArray[i].renderer().setRenderable(heartRenderable);
             }
@@ -81,7 +81,7 @@ public class Graphics {
     }
 
 
-    public boolean showGameOverScreenAndReturnValue(WindowController windowController){
+    public boolean showGameOverScreenAndReturnValue(){
         return windowController.openYesNoDialog("You Lose! Play again?");
     }
 

@@ -31,14 +31,19 @@ public class BrickerGameManager extends GameManager {
     private final int PADDLE_LAYER = Layer.DEFAULT;
     private final int BRICKS_LAYER = Layer.STATIC_OBJECTS;
     private final String WALLS_TAG = "";
+    private final int MAX_HEARTS = 4;
+    private final int INITIAL_HEARTS = 1;
+    private int currentHearts = INITIAL_HEARTS;
     private int bricksRemaining;
     private int numberOfRows, bricksPerRow;
     private Vector2 windowDimensions;
+    private WindowController windowController;
     private ImageSoundFactory imageSoundFactory;
     private UserInputListener inputListener;
     private int ballCollisionCounter;
     private Ball mainBall;
     public boolean extraPaddle = false;
+    private Graphics graphics;
     
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int numberOfRows, int bricksPerRow) {
         super(windowTitle, windowDimensions);
@@ -53,17 +58,33 @@ public class BrickerGameManager extends GameManager {
             this.setCamera(null);
         }
 
+        // check if ball exited screen
+        if (mainBall.getTopLeftCorner().y() > windowDimensions.y()){
+            doOnBallExitScreen();
+        }
+
+        for (GameObject gameObject: gameObjects().objectsInLayer(BALLS_LAYER)){
+            if (gameObject.getTag() == PUCK_TAG){
+                if (gameObject.getTopLeftCorner().y() >= windowDimensions.y()){
+                    gameObjects().removeGameObject(gameObject, BALLS_LAYER);
+                    System.out.println("Deleted Puck!");
+                }
+            }
+        }
+
+
+
     }
 
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-
         this.imageSoundFactory = new ImageSoundFactory(imageReader, soundReader);
         this.windowDimensions = windowController.getWindowDimensions();
         this.inputListener = inputListener;
         this.ballCollisionCounter = 0;
-
+        this.windowController = windowController;
+        
         //paddle
         Paddle paddle = initializePaddle(new Vector2(windowDimensions.x() * 0.5f, windowDimensions.y() - 30));
 
@@ -84,8 +105,11 @@ public class BrickerGameManager extends GameManager {
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.STATIC_OBJECTS, false);
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.DEFAULT, true);
 
-        Graphics graphics = new Graphics(windowController, imageSoundFactory, gameObjects());
-        graphics.initializeLifeCounter();
+        // initialize graphics - hearts!
+        graphics = new Graphics(windowController, imageSoundFactory, gameObjects());
+        graphics.initializeLifeCounter(MAX_HEARTS, INITIAL_HEARTS);
+
+        currentHearts = INITIAL_HEARTS;
     }
     
     private Paddle initializePaddle(Vector2 initialPlace) {
@@ -171,6 +195,23 @@ public class BrickerGameManager extends GameManager {
         }
         object.setVelocity(new Vector2(velX, velY));
     }
+
+    private void doOnBallExitScreen(){
+        currentHearts--;
+        if (currentHearts == 0){
+            boolean play_again = graphics.showGameOverScreenAndReturnValue();
+            if (play_again){
+                windowController.resetGame();
+            }
+            else{
+                windowController.closeWindow();
+            }
+        }
+        graphics.updateHeartCount(currentHearts);
+        mainBall.setCenter(windowDimensions.mult(0.5f));
+        setObjectVelocityRandomDiagonal(mainBall, BALL_SPEED);
+    }
+
     
     public void onBrickRemoved() {
         bricksRemaining--;
