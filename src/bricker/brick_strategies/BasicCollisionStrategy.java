@@ -2,17 +2,17 @@ package bricker.brick_strategies;
 
 import danogl.GameObject;
 import danogl.collisions.Layer;
-import bricker.main.BrickerGameMananger;
+import bricker.main.BrickerGameManager;
 
 public class BasicCollisionStrategy implements CollsionStrategy{
-    private BrickerGameMananger gameMananger;
+    private BrickerGameManager gameManager;
 
     /**
      *
-     * @param gameMananger
+     * @param gameManager
      */
-    public BasicCollisionStrategy(BrickerGameMananger gameMananger){
-        this.gameMananger = gameMananger;
+    public BasicCollisionStrategy(BrickerGameManager gameManager){
+        this.gameManager = gameManager;
     }
 
     /**
@@ -22,6 +22,6 @@ public class BasicCollisionStrategy implements CollsionStrategy{
      */
     @Override
     public void onCollision(GameObject gameObject1, GameObject gameObject2) {
-        gameMananger.removeGameObject(gameObject1, gameMananger.BRICKS_LAYER);
+        gameManager.removeGameObject(gameObject1, gameManager.getBricksLayer());
     }
 }

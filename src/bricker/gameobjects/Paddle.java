@@ -1,7 +1,9 @@
 package bricker.gameobjects;
 
-import bricker.main.BrickerGameMananger;
+import bricker.main.BrickerGameManager;
+import danogl.GameManager;
 import danogl.GameObject;
+import danogl.collisions.Collision;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
@@ -9,15 +11,26 @@ import danogl.util.Vector2;
 import java.awt.event.KeyEvent;
 
 public class Paddle  extends GameObject {
-    private static final float MOVEMENT_SPEED = 300;
+    public static final String ANOTHER_PADDLE_TAG = "another paddle";
+    private static final int MAX_HITS_ANOTHER_PADDLE = 4;
     private final UserInputListener inputListener;
-    private final BrickerGameMananger gameMananger;
+    private final BrickerGameManager gameManager;
+    private int num_collisions;
+
+    public UserInputListener getInputListener() {
+        return inputListener;
+    }
 
     public Paddle(Vector2 topLeftCorner, Vector2 dimensions,
-                  Renderable renderable, UserInputListener inputListener, BrickerGameMananger gameMananger) {
+                  Renderable renderable, UserInputListener inputListener, BrickerGameManager gameManager) {
         super(topLeftCorner, dimensions, renderable);
         this.inputListener = inputListener;
-        this.gameMananger = gameMananger;
+        this.gameManager = gameManager;
+        this.num_collisions = 0;
+    }
+    public void setLabelAnotherPaddle(){
+        this.setTag(ANOTHER_PADDLE_TAG);
+
     }
     @Override
     public void update(float deltaTime){
@@ -29,15 +42,25 @@ public class Paddle  extends GameObject {
         if(inputListener.isKeyPressed(KeyEvent.VK_RIGHT)){
             movementDir = movementDir.add(Vector2.RIGHT);
         }
-        setVelocity(movementDir.mult(MOVEMENT_SPEED));
+        setVelocity(movementDir.mult(gameManager.getPaddleSpeed()));
 
         if (getTopLeftCorner().x() < 0){
             setTopLeftCorner(new Vector2(0, getTopLeftCorner().y()));
         }
 
-        if (getTopLeftCorner().x() + getDimensions().x() > gameMananger.getWindowDimensions().x()){
-            setTopLeftCorner(new Vector2(gameMananger.getWindowDimensions().x() -  getDimensions().x(), getTopLeftCorner().y()));
+        if (getTopLeftCorner().x() + getDimensions().x() > gameManager.getWindowDimensions().x()){
+            setTopLeftCorner(new Vector2(gameManager.getWindowDimensions().x() -  getDimensions().x(), getTopLeftCorner().y()));
         }
     }
 
+    @Override
+    public void onCollisionEnter(GameObject other, Collision collision) {
+        if (!other.getTag().equals(gameManager.getWallsTag())){
+            num_collisions += 1;
+        }
+        if (this.getTag().equals(ANOTHER_PADDLE_TAG) && num_collisions >= MAX_HITS_ANOTHER_PADDLE){
+           gameManager.removeGameObject(this, gameManager.getPaddleLayer());
+           gameManager.setExtraPaddle(false);
+        }
+    }
 }
