@@ -1,6 +1,6 @@
 package bricker.main;
 
-import bricker.gameobjects.Paddle;
+import bricker.gameobjects.*;
 import danogl.GameManager;//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 import danogl.GameObject;
 import danogl.gui.*;
@@ -11,11 +11,8 @@ import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import bricker.gameobjects.Ball;
 import bricker.brick_strategies.BasicCollisionStrategy;
 import bricker.brick_strategies.CollsionStrategy;
-import bricker.gameobjects.Brick;
-import bricker.gameobjects.GameWrapper;
 
 import java.util.Random;
 
@@ -124,8 +121,30 @@ public class BrickerGameMananger extends GameManager {
             ballVelY *= -1;
         }
         ball.setVelocity(new Vector2(ballVelX, ballVelY));
-        ball.setCenter(windowDimensions.mult(0.5f));
+        ball.setCenter(windowDimensions.mult(0.8f));
         gameObjects().addGameObject(ball);
+    }
+
+    public void initializePuck() {
+        GameObject puck = new Puck(
+                Vector2.ZERO,
+                new Vector2(50, 50),
+                imageSoundFactory.getImageObject(ImageType.PUCK),
+                imageSoundFactory.getSoundObject(SoundType.BLOP),
+                this
+        );
+        float ballVelX = BALL_SPEED;
+        float ballVelY = BALL_SPEED;
+        Random rand = new Random();
+        if (rand.nextBoolean()) {
+            ballVelX *= -1;
+        }
+        if (rand.nextBoolean()) {
+            ballVelY *= -1;
+        }
+        puck.setVelocity(new Vector2(ballVelX, ballVelY));
+        puck.setCenter(windowDimensions.mult(0.5f));
+        gameObjects().addGameObject(puck);
     }
 
 

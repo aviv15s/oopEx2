@@ -9,6 +9,7 @@ import danogl.util.Vector2;
 
 public class Puck extends Ball{
 
+
     public Puck(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, Sound collisionSound, BrickerGameMananger gameMananger) {
         super(topLeftCorner, dimensions, renderable, collisionSound, gameMananger);
     }
