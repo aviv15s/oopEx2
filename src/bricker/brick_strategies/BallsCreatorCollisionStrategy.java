@@ -1,22 +1,18 @@
 package bricker.brick_strategies;
 
-import bricker.gameobjects.Puck;
-import bricker.main.BrickerGameMananger;
-import bricker.main.ImageType;
-import bricker.main.SoundType;
+import bricker.main.BrickerGameManager;
 import danogl.GameObject;
-import danogl.util.Vector2;
 
 public class BallsCreatorCollisionStrategy implements CollsionStrategy{
 
-    private BrickerGameMananger gameMananger;
+    private BrickerGameManager gameManager;
 
     /**
      * Creates an instance of BallsCreatorCollisionStrategy.
-     * @param gameMananger instance of BrickerGameMananger.
+     * @param gameManager instance of BrickerGameManager.
      */
-    public BallsCreatorCollisionStrategy(BrickerGameMananger gameMananger) {
-        this.gameMananger = gameMananger;
+    public BallsCreatorCollisionStrategy(BrickerGameManager gameManager) {
+        this.gameManager = gameManager;
     }
 
     /**
@@ -26,7 +22,7 @@ public class BallsCreatorCollisionStrategy implements CollsionStrategy{
      */
     @Override
     public void onCollision(GameObject gameObject1, GameObject gameObject2) {
-        gameMananger.initializePuck(gameObject1.getCenter());
-        gameMananger.initializePuck(gameObject1.getCenter());
+        gameManager.initializePuck(gameObject1.getCenter());
+        gameManager.initializePuck(gameObject1.getCenter());
     }
 }

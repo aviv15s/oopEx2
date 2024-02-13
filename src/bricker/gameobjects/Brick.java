@@ -1,7 +1,7 @@
 package bricker.gameobjects;
 
 import bricker.brick_strategies.CollisionStrategyFactory;
-import bricker.main.BrickerGameMananger;
+import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.collisions.Layer;
@@ -12,12 +12,12 @@ import bricker.brick_strategies.CollsionStrategy;
 public class Brick extends GameObject{
     private CollsionStrategy[] collsionStrategy;
     private boolean isHit = false;
-    private final BrickerGameMananger gameMananger;
-    public Brick(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, CollsionStrategy collsionStrategy, BrickerGameMananger gameMananger) {
+    private final BrickerGameManager gameManager;
+    public Brick(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, CollsionStrategy collsionStrategy, BrickerGameManager gameManager) {
         super(topLeftCorner, dimensions, renderable);
-        this.gameMananger = gameMananger;
+        this.gameManager = gameManager;
         CollisionStrategyFactory collisionStrategyFactory = new CollisionStrategyFactory();
-        this.collsionStrategy = collisionStrategyFactory.collisionStrategy(this.gameMananger);
+        this.collsionStrategy = collisionStrategyFactory.collisionStrategy(this.gameManager);
     }
 
 //delete me
@@ -34,7 +34,7 @@ public class Brick extends GameObject{
                 collsionStrategy[i].onCollision(this, other);
             }
         }
-        gameMananger.removeGameObject(this, gameMananger.BRICKS_LAYER);
+        gameManager.removeGameObject(this, gameManager.getBricksLayer());
 
     }
 

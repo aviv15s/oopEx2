@@ -1,5 +1,5 @@
 package bricker.gameobjects;
-import bricker.main.BrickerGameMananger;
+import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.collisions.Layer;
@@ -10,13 +10,13 @@ import danogl.gui.ImageReader;
 public class Ball extends GameObject {
     private final Sound collisionSound;
     private int collisionCounter = 0;
-    private BrickerGameMananger gameMananger;
+    private BrickerGameManager gameManager;
 
     public Ball(Vector2 topLeftCorner, Vector2 dimensions,
-                Renderable renderable, Sound collisionSound, BrickerGameMananger gameMananger) {
+                Renderable renderable, Sound collisionSound, BrickerGameManager gameManager) {
         super(topLeftCorner, dimensions, renderable);
         this.collisionSound = collisionSound;
-        this.gameMananger = gameMananger;
+        this.gameManager = gameManager;
     }
 
     @Override
@@ -26,6 +26,7 @@ public class Ball extends GameObject {
         setVelocity(newVel);
         collisionSound.play();
         collisionCounter++;
+
     }
 
     public int getCollisionCounter(){
@@ -34,13 +35,13 @@ public class Ball extends GameObject {
 
     public void onExitScreen(){
         System.out.println("Ball Exited Screen!");
-        gameMananger.removeGameObject(this, Layer.DEFAULT);
+        gameManager.removeGameObject(this, Layer.DEFAULT);
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        if (getTopLeftCorner().y() > gameMananger.getWindowDimensions().y()){
+        if (getTopLeftCorner().y() > gameManager.getWindowDimensions().y()){
             onExitScreen();
         }
     }
