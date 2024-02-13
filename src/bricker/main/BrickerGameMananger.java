@@ -20,7 +20,7 @@ import java.util.Vector;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class BrickerGameMananger extends GameManager {
     private final int WALL_THICKNESS = 2;
-    private final int BALL_SPEED = 100;
+    private final int BALL_SPEED = 250;
     private final Vector2 BALL_SIZE = new Vector2(50, 50);
     private final Vector2 PUCK_SIZE = BALL_SIZE.mult(0.75f);
     private final Vector2 PADDLE_SIZE = new Vector2(200,20);
@@ -66,7 +66,7 @@ public class BrickerGameMananger extends GameManager {
 
         Ball ball = initializeBall();
         ball.setCenter(windowDimensions.mult(0.5f));
-        setObjectVelocityRandomDirection(ball, BALL_SPEED);
+        setObjectVelocityRandomDiagonal(ball, BALL_SPEED);
 
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.STATIC_OBJECTS, false);
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.DEFAULT, true);
@@ -79,6 +79,19 @@ public class BrickerGameMananger extends GameManager {
         float velocityY = (float) Math.sin(angle) * speed;
         Vector2 velocity = new Vector2(velocityX, velocityY);
         object.setVelocity(velocity);
+    }
+
+    private void setObjectVelocityRandomDiagonal(GameObject object, float speed){
+        Random random = new Random();
+        float speedOnEachAxis = speed / (float) Math.sqrt(2);
+        float velX = speedOnEachAxis, velY = speedOnEachAxis;
+        if (random.nextBoolean()){
+            velX *= -1;
+        }
+        if (random.nextBoolean()){
+            velY *= -1;
+        }
+        object.setVelocity(new Vector2(velX, velY));
     }
 
     private Paddle initializePaddle(UserInputListener inputListener){
