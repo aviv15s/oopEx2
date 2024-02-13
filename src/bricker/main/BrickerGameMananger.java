@@ -15,11 +15,15 @@ import bricker.brick_strategies.BasicCollisionStrategy;
 import bricker.brick_strategies.CollsionStrategy;
 
 import java.util.Random;
+import java.util.Vector;
 
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class BrickerGameMananger extends GameManager {
     private final int WALL_THICKNESS = 2;
     private final int BALL_SPEED = 100;
+    private final Vector2 BALL_SIZE = new Vector2(50, 50);
+    private final Vector2 PUCK_SIZE = BALL_SIZE.mult(0.75f);
+    private final Vector2 PADDLE_SIZE = new Vector2(200,20);
     private int numberOfRows, bricksPerRow;
     public final int BRICKS_LAYER = Layer.STATIC_OBJECTS;
     private Vector2 windowDimensions;
@@ -46,28 +50,49 @@ public class BrickerGameMananger extends GameManager {
         this.windowDimensions = windowController.getWindowDimensions();
 
         //paddle
-        Renderable paddleImage = imageReader.readImage("assets/paddle.png",
-                true);
-        GameObject paddle = new Paddle(Vector2.ZERO,
-                new Vector2(200, 20),
-                paddleImage, inputListener, this);
-        paddle.setCenter(new Vector2(windowDimensions.x() * 0.5f,
-                windowDimensions.y() - 30));
-        gameObjects().addGameObject(paddle);
+        Paddle paddle = initializePaddle(inputListener);
+        paddle.setCenter(new Vector2(
+                windowDimensions.x() * 0.5f,
+                windowDimensions.y() - 30)
+        );
 
         // initialize the walls colliders
-        initializeWalls(windowDimensions);
+        initializeWalls();
 
         GameWrapper gameWrapper = new GameWrapper();
         gameWrapper.initializeBackground(gameObjects(), windowDimensions, imageSoundFactory.getImageObject(ImageType.BACKGROUND));
 
-        initializeBricks(imageReader, windowDimensions, numberOfRows, bricksPerRow);
-        initializeBall();
+        initializeBricks(numberOfRows, bricksPerRow);
+
+        Ball ball = initializeBall();
+        ball.setCenter(windowDimensions.mult(0.5f));
+        setObjectVelocityRandomDirection(ball, BALL_SPEED);
+
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.STATIC_OBJECTS, false);
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.DEFAULT, true);
     }
 
-    private void initializeWalls(Vector2 windowDimensions) {
+    private void setObjectVelocityRandomDirection(GameObject object, float speed){
+        Random random = new Random();
+        double angle = random.nextDouble() * Math.PI;
+        float velocityX = (float) Math.cos(angle) * speed;
+        float velocityY = (float) Math.sin(angle) * speed;
+        Vector2 velocity = new Vector2(velocityX, velocityY);
+        object.setVelocity(velocity);
+    }
+
+    private Paddle initializePaddle(UserInputListener inputListener){
+        Renderable paddleImage = imageSoundFactory.getImageObject(ImageType.PADDLE);
+        Paddle paddle = new Paddle(
+                Vector2.ZERO,
+                new Vector2(PADDLE_SIZE),
+                paddleImage,
+                inputListener,
+                this);
+        gameObjects().addGameObject(paddle);
+        return paddle;
+    }
+    private void initializeWalls() {
         GameObject wallLeft = new GameObject(new Vector2(-WALL_THICKNESS, 0),
                 new Vector2(WALL_THICKNESS, windowDimensions.y()),
                 null);
@@ -84,9 +109,9 @@ public class BrickerGameMananger extends GameManager {
         gameObjects().addGameObject(wallRight, Layer.STATIC_OBJECTS);
     }
 
-    private void initializeBricks(ImageReader imageReader, Vector2 windowDimensions, int numberOfRows, int bricksPerRow) {
+    private void initializeBricks(int numberOfRows, int bricksPerRow) {
         CollsionStrategy collsionStrategy = new BasicCollisionStrategy(this);
-        Renderable brickImage = imageReader.readImage("assets/brick.png", true);
+        Renderable brickImage = imageSoundFactory.getImageObject(ImageType.BRICK);
 
         int brickWidth = (int) windowDimensions.x() / bricksPerRow;
         int brickHeight = 15;
@@ -103,54 +128,31 @@ public class BrickerGameMananger extends GameManager {
         }
     }
 
-    private void initializeBall() {
-        GameObject ball = new Ball(
+    private Ball initializeBall() {
+        Ball ball = new Ball(
                 Vector2.ZERO,
-                new Vector2(50, 50),
+                new Vector2(BALL_SIZE),
                 imageSoundFactory.getImageObject(ImageType.BALL),
                 imageSoundFactory.getSoundObject(SoundType.BLOP),
                 this
         );
-        float ballVelX = BALL_SPEED;
-        float ballVelY = BALL_SPEED;
-        Random rand = new Random();
-        if (rand.nextBoolean()) {
-            ballVelX *= -1;
-        }
-        if (rand.nextBoolean()) {
-            ballVelY *= -1;
-        }
-        ball.setVelocity(new Vector2(ballVelX, ballVelY));
-        ball.setCenter(windowDimensions.mult(0.8f));
         gameObjects().addGameObject(ball);
+        return ball;
     }
 
-    public void initializePuck() {
-        GameObject puck = new Puck(
+    public Puck initializePuck(Vector2 center) {
+        Puck puck = new Puck(
                 Vector2.ZERO,
-                new Vector2(50, 50),
+                new Vector2(PUCK_SIZE),
                 imageSoundFactory.getImageObject(ImageType.PUCK),
                 imageSoundFactory.getSoundObject(SoundType.BLOP),
                 this
         );
-        float ballVelX = BALL_SPEED;
-        float ballVelY = BALL_SPEED;
-        Random rand = new Random();
-        if (rand.nextBoolean()) {
-            ballVelX *= -1;
-        }
-        if (rand.nextBoolean()) {
-            ballVelY *= -1;
-        }
-        puck.setVelocity(new Vector2(ballVelX, ballVelY));
-        puck.setCenter(windowDimensions.mult(0.5f));
         gameObjects().addGameObject(puck);
+        return puck;
     }
 
 
-    //    public void update(float deltaTime){
-//        String s = "hi";
-//    }
     public static void main(String[] args) {
         int numberOfRows = 7, bricksPerRow = 8;
         if (args.length >= 1) {
