@@ -2,6 +2,7 @@ package bricker.gameobjects;
 import bricker.main.BrickerGameMananger;
 import danogl.GameObject;
 import danogl.collisions.Collision;
+import danogl.collisions.Layer;
 import danogl.gui.Sound;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
@@ -33,6 +34,7 @@ public class Ball extends GameObject {
 
     public void onExitScreen(){
         System.out.println("Ball Exited Screen!");
+        gameMananger.removeGameObject(this, Layer.DEFAULT);
     }
 
     @Override

@@ -20,6 +20,7 @@ public class Brick extends GameObject{
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
         collsionStrategy.onCollision(this, other);
+        // TODO add call to gameManager onRemoveBrick
     }
 
 }

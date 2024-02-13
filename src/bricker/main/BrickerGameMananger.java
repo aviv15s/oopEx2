@@ -19,6 +19,7 @@ import java.util.Vector;
 
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class BrickerGameMananger extends GameManager {
+    private int bricksRemaining;
     private final int WALL_THICKNESS = 2;
     private final int BALL_SPEED = 250;
     private final Vector2 BALL_SIZE = new Vector2(50, 50);
@@ -123,6 +124,7 @@ public class BrickerGameMananger extends GameManager {
     }
 
     private void initializeBricks(int numberOfRows, int bricksPerRow) {
+        bricksRemaining = numberOfRows * bricksPerRow;
         CollsionStrategy collsionStrategy = new BasicCollisionStrategy(this);
         Renderable brickImage = imageSoundFactory.getImageObject(ImageType.BRICK);
 
@@ -163,6 +165,14 @@ public class BrickerGameMananger extends GameManager {
         );
         gameObjects().addGameObject(puck);
         return puck;
+    }
+
+    public void onBrickRemoved(){
+        bricksRemaining--;
+        if (bricksRemaining <= 0){
+            // TODO do something because the player WON!
+            System.out.println("Player WINSSSSSS");
+        }
     }
 
 
