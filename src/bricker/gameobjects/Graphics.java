@@ -85,4 +85,8 @@ public class Graphics {
         return windowController.openYesNoDialog("You Lose! Play again?");
     }
 
+    public boolean showGameWonScreenAndReturnValue(){
+        return windowController.openYesNoDialog("You Win! Play again?");
+    }
+
 }

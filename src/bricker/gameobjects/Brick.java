@@ -4,7 +4,6 @@ import bricker.brick_strategies.CollisionStrategyFactory;
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.collisions.Collision;
-import danogl.collisions.Layer;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import bricker.brick_strategies.CollsionStrategy;
@@ -34,7 +33,7 @@ public class Brick extends GameObject{
                 collsionStrategy[i].onCollision(this, other);
             }
         }
-        gameManager.removeGameObject(this, gameManager.getBricksLayer());
+        gameManager.removeBrick(this);
 
     }
 

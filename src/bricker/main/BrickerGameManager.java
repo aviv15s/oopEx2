@@ -10,10 +10,12 @@ import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
 import danogl.gui.rendering.Renderable;
+import danogl.util.Counter;
 import danogl.util.Vector2;
 import bricker.brick_strategies.BasicCollisionStrategy;
 import bricker.brick_strategies.CollsionStrategy;
 
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -32,9 +34,9 @@ public class BrickerGameManager extends GameManager {
     private final int BRICKS_LAYER = Layer.STATIC_OBJECTS;
     private final String WALLS_TAG = "";
     private final int MAX_HEARTS = 4;
-    private final int INITIAL_HEARTS = 1;
+    private final int INITIAL_HEARTS = 3;
     private int currentHearts = INITIAL_HEARTS;
-    private int bricksRemaining;
+    private Counter bricksRemaining;
     private int numberOfRows, bricksPerRow;
     private Vector2 windowDimensions;
     private WindowController windowController;
@@ -44,6 +46,7 @@ public class BrickerGameManager extends GameManager {
     private Ball mainBall;
     public boolean extraPaddle = false;
     private Graphics graphics;
+    private UserInputListener userInputListener;
     
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int numberOfRows, int bricksPerRow) {
         super(windowTitle, windowDimensions);
@@ -63,6 +66,7 @@ public class BrickerGameManager extends GameManager {
             doOnBallExitScreen();
         }
 
+        // check if need to remove pucks
         for (GameObject gameObject: gameObjects().objectsInLayer(BALLS_LAYER)){
             if (gameObject.getTag() == PUCK_TAG){
                 if (gameObject.getTopLeftCorner().y() >= windowDimensions.y()){
@@ -72,7 +76,11 @@ public class BrickerGameManager extends GameManager {
             }
         }
 
-
+        // check if magic key "W" is pressed
+        if (userInputListener != null && userInputListener.wasKeyPressedThisFrame(KeyEvent.getExtendedKeyCodeForChar('w'))){
+            boolean playAgain = graphics.showGameWonScreenAndReturnValue();
+            restartGameOrExit(playAgain);
+        }
 
     }
 
@@ -84,7 +92,7 @@ public class BrickerGameManager extends GameManager {
         this.inputListener = inputListener;
         this.ballCollisionCounter = 0;
         this.windowController = windowController;
-        
+        this.userInputListener = inputListener;
         //paddle
         Paddle paddle = initializePaddle(new Vector2(windowDimensions.x() * 0.5f, windowDimensions.y() - 30));
 
@@ -142,7 +150,7 @@ public class BrickerGameManager extends GameManager {
     }
 
     private void initializeBricks(int numberOfRows, int bricksPerRow) {
-        bricksRemaining = numberOfRows * bricksPerRow;
+        bricksRemaining = new Counter(numberOfRows * bricksPerRow);
         CollsionStrategy collsionStrategy = new BasicCollisionStrategy(this);
         Renderable brickImage = imageSoundFactory.getImageObject(ImageType.BRICK);
 
@@ -199,25 +207,35 @@ public class BrickerGameManager extends GameManager {
     private void doOnBallExitScreen(){
         currentHearts--;
         if (currentHearts == 0){
-            boolean play_again = graphics.showGameOverScreenAndReturnValue();
-            if (play_again){
-                windowController.resetGame();
-            }
-            else{
-                windowController.closeWindow();
-            }
+            boolean playAgain = graphics.showGameOverScreenAndReturnValue();
+            restartGameOrExit(playAgain);
         }
         graphics.updateHeartCount(currentHearts);
         mainBall.setCenter(windowDimensions.mult(0.5f));
         setObjectVelocityRandomDiagonal(mainBall, BALL_SPEED);
     }
 
+    private void restartGameOrExit(boolean playAgain){
+        if (playAgain){
+            windowController.resetGame();
+        }
+        else{
+            windowController.closeWindow();
+        }
+    }
+
     
-    public void onBrickRemoved() {
-        bricksRemaining--;
-        if (bricksRemaining <= 0) {
-            // TODO do something because the player WON!
-            System.out.println("Player WINSSSSSS");
+    public void removeBrick(Brick brick) {
+        gameObjects().removeGameObject(brick, BRICKS_LAYER);
+        bricksRemaining.decrement();
+        if (bricksRemaining.value() <= 0) {
+            boolean playAgain = graphics.showGameWonScreenAndReturnValue();
+            if (playAgain){
+                windowController.resetGame();
+            }
+            else{
+                windowController.closeWindow();
+            }
         }
     }
 
