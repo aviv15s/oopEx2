@@ -1,4 +1,5 @@
 package bricker.brick_strategies;
 
-public class ChangeCameraCollisionStrategy{
-}
+//public class ChangeCameraCollisionStrategy implements CollsionStrategy{
+
+//}

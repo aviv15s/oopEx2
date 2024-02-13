@@ -21,21 +21,16 @@ public class ImageSoundFactory {
      */
     public Renderable getImageObject(ImageType imageType){
         switch(imageType){
-            case BALL -> {
+            case BALL :
                 return imageReader.readImage("assets/ball.png", true);
-            }
-            case PUCK -> {
+            case PUCK :
                 return imageReader.readImage("assets/mockBall.png", true);
-            }
-            case PADDLE -> {
+            case PADDLE:
                 return imageReader.readImage("assets/paddle.png", true);
-            }
-            case BRICK -> {
+            case BRICK:
                 return imageReader.readImage("assets/brick.png", true);
-            }
-            case BACKGROUND -> {
+            case BACKGROUND:
                 return imageReader.readImage("assets/DARK_BG2_small.jpeg", false);
-            }
         }
         return null;
     }
@@ -47,9 +42,8 @@ public class ImageSoundFactory {
      */
     public Sound getSoundObject(SoundType soundType){
         switch(soundType){
-            case BLOP -> {
+            case BLOP:
                 return soundReader.readSound("assets/blop_cut_silenced.wav");
-            }
         }
         return null;
     }

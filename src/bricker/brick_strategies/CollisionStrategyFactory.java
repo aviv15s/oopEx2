@@ -1,4 +1,6 @@
 package bricker.brick_strategies;
+import bricker.main.BrickerGameMananger;
+
 import java.util.Random;
 public class CollisionStrategyFactory {
     private final int RANDOM_MAX = 10;
@@ -10,19 +12,19 @@ public class CollisionStrategyFactory {
     private final int DOUBLE_BEHAVIOR = 4;
     public CollisionStrategyFactory() {
     }
-    public CollsionStrategy[] collisionStrategy(){
+    public CollsionStrategy[] collisionStrategy(BrickerGameMananger gameMananger){
         CollsionStrategy[] arrCollisionStrategy = new CollsionStrategy[MAX_DOUBLE_BEHAVIORS];
         Random rand = new Random();
         int randInt = rand.nextInt(RANDOM_MAX);
         if(randInt == DOUBLE_BEHAVIOR){
-            setCaseDouble(rand, arrCollisionStrategy);
+            setCaseDouble(rand, arrCollisionStrategy,gameMananger);
         }
         else{
-            setCollisionStrategyIndex(randInt,0,arrCollisionStrategy);
+            setCollisionStrategyIndex(randInt,0,arrCollisionStrategy, gameMananger);
         }
         return arrCollisionStrategy;
     }
-    private void setCaseDouble(Random rand,CollsionStrategy[] arrCollisionStrategy){
+    private void setCaseDouble(Random rand,CollsionStrategy[] arrCollisionStrategy, BrickerGameMananger gameMananger){
         int randInt;
         int index = 0;
         int numToFill = 2;
@@ -34,24 +36,24 @@ public class CollisionStrategyFactory {
                 numToFill+=1;
             }
             else if(randInt != DOUBLE_BEHAVIOR){
-                setCollisionStrategyIndex(randInt,index,arrCollisionStrategy);
+                setCollisionStrategyIndex(randInt,index,arrCollisionStrategy,gameMananger);
                 index += 1;
                 numToFill -= 1;
             }
         }
     }
-    private void setCollisionStrategyIndex(int randInt,int index,CollsionStrategy[] arrCollisionStrategy){
+    private void setCollisionStrategyIndex(int randInt,int index,CollsionStrategy[] arrCollisionStrategy, BrickerGameMananger gameMananger){
         if(randInt == BALLS_CREATOR){
-            arrCollisionStrategy[index] = new BallsCreatorCollisionStrategy();
+            arrCollisionStrategy[index] = new BallsCreatorCollisionStrategy(gameMananger);
         } else if(randInt == PADDLE_CREATOR){
-            arrCollisionStrategy[index] = new PaddleCreatorCollisionStrategy();
+            arrCollisionStrategy[index] = new PaddleCreatorCollisionStrategy(gameMananger);
         } else if(randInt == CHANGE_CAMERA){
-            arrCollisionStrategy[index] = new ChangeCameraCollisionStrategy();
+//            arrCollisionStrategy[index] = new ChangeCameraCollisionStrategy(gameMananger);
         } else if (randInt == LIFE_RECOVERY) {
-            arrCollisionStrategy[index] = new LifeRecoveryCollisionStrategy();
+//            arrCollisionStrategy[index] = new LifeRecoveryCollisionStrategy(gameMananger);
         }
         else {
-            arrCollisionStrategy[index] = new BasicCollisionStrategy();
+            arrCollisionStrategy[index] = new BasicCollisionStrategy(gameMananger);
         }
 
     }

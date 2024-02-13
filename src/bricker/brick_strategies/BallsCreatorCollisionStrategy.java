@@ -1,9 +1,14 @@
 package bricker.brick_strategies;
 
+import bricker.gameobjects.Puck;
 import bricker.main.BrickerGameMananger;
+import bricker.main.ImageType;
+import bricker.main.SoundType;
 import danogl.GameObject;
+import danogl.util.Vector2;
 
 public class BallsCreatorCollisionStrategy implements CollsionStrategy{
+
     private BrickerGameMananger gameMananger;
 
     /**
@@ -21,6 +26,8 @@ public class BallsCreatorCollisionStrategy implements CollsionStrategy{
      */
     @Override
     public void onCollision(GameObject gameObject1, GameObject gameObject2) {
-
+        gameMananger.initializePuck(gameObject1.getCenter());
+        gameMananger.initializePuck(gameObject1.getCenter());
+        gameMananger.removeGameObject(gameObject1, gameMananger.BRICKS_LAYER);
     }
 }

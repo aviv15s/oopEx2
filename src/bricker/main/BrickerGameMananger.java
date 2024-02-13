@@ -20,7 +20,7 @@ import java.util.Vector;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class BrickerGameMananger extends GameManager {
     private final int WALL_THICKNESS = 2;
-    private final int BALL_SPEED = 100;
+    private final int BALL_SPEED = 200;
     private final Vector2 BALL_SIZE = new Vector2(50, 50);
     private final Vector2 PUCK_SIZE = BALL_SIZE.mult(0.75f);
     private final Vector2 PADDLE_SIZE = new Vector2(200,20);
@@ -149,6 +149,8 @@ public class BrickerGameMananger extends GameManager {
                 this
         );
         gameObjects().addGameObject(puck);
+        puck.setCenter(center);
+        setObjectVelocityRandomDirection(puck,BALL_SPEED);
         return puck;
     }
 
