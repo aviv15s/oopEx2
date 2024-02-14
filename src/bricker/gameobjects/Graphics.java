@@ -1,21 +1,21 @@
 package bricker.gameobjects;
 
-import bricker.main.BrickerGameManager;
 import bricker.main.ImageSoundFactory;
 import bricker.main.ImageType;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 import danogl.components.CoordinateSpace;
-import danogl.gui.ImageReader;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Renderable;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
-import org.w3c.dom.Text;
 
 import java.awt.*;
 
+/**
+ * a function that holds graphics function for displaying gui
+ */
 public class Graphics {
     private final int HEART_SIZE = 20;
     private final int MARGIN = 5;
@@ -25,13 +25,25 @@ public class Graphics {
     private TextRenderable textRenderable;
     private Renderable heartRenderable;
 
-
-    public Graphics(WindowController windowController, ImageSoundFactory imageSoundFactory, GameObjectCollection gameObjects){
+    /**
+     * a constructor for the class
+     * @param windowController
+     * @param imageSoundFactory
+     * @param gameObjects
+     */
+    public Graphics(WindowController windowController, ImageSoundFactory imageSoundFactory,
+                    GameObjectCollection gameObjects){
         this.windowController = windowController;
         heartRenderable = imageSoundFactory.getImageObject(ImageType.HEART);
         this.gameObjects = gameObjects;
 
     }
+
+    /**
+     * a function that initializes the heart counter. should only be called once.
+     * @param maxHearts
+     * @param initialHearts
+     */
     public void initializeLifeCounter(int maxHearts, int initialHearts){
         heartArray = new GameObject[maxHearts];
         for (int i = 0; i < heartArray.length; i++) {
@@ -39,7 +51,8 @@ public class Graphics {
         }
         for (int i = 0; i < heartArray.length; i++) {
             GameObject heart = new GameObject(
-                    new Vector2((i+1) * (HEART_SIZE+MARGIN), windowController.getWindowDimensions().y() - MARGIN - HEART_SIZE),
+                    new Vector2((i+1) * (HEART_SIZE+MARGIN),
+                            windowController.getWindowDimensions().y() - MARGIN - HEART_SIZE),
                     new Vector2(HEART_SIZE, HEART_SIZE),
                     null
             );
@@ -57,6 +70,10 @@ public class Graphics {
         updateHeartCount(initialHearts);
     }
 
+    /**
+     * a public function to call to update the number of hearts on the screen.
+     * @param heartCount
+     */
     public void updateHeartCount(int heartCount){
         for (int i = 0; i < heartArray.length; i++) {
             if (i < heartCount){
@@ -81,16 +98,30 @@ public class Graphics {
         }
     }
 
-
+    /**
+     * show the game over screen and return the player's answer
+     * @return true/false
+     */
     public boolean showGameOverScreenAndReturnValue(){
         return windowController.openYesNoDialog("You Lose! Play again?");
     }
 
+    /**
+     * show the win screen and return the player's answer
+     * @return true/false
+     */
     public boolean showGameWonScreenAndReturnValue(){
         return windowController.openYesNoDialog("You Win! Play again?");
     }
 
-    public void initializeBackground(GameObjectCollection gameObjects, Vector2 windowDimensions, Renderable backgroundImage){
+    /**
+     * a function to initialize the background
+     * @param gameObjects game objects list
+     * @param windowDimensions window dimensions
+     * @param backgroundImage the image renderable for the background
+     */
+    public void initializeBackground(GameObjectCollection gameObjects, Vector2 windowDimensions,
+                                     Renderable backgroundImage){
         GameObject background = new GameObject(Vector2.ZERO,
                 windowDimensions,
                 backgroundImage);

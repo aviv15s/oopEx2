@@ -6,6 +6,9 @@ import danogl.collisions.Collision;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
+/**
+ * A class that represents a falling heart object used to revive player
+ */
 public class FallingHeart extends GameObject {
     private BrickerGameManager brickerGameManager;
     /**
@@ -17,11 +20,19 @@ public class FallingHeart extends GameObject {
      * @param renderable    The renderable representing the object. Can be null, in which case
      *                      the GameObject will not be rendered.
      */
-    public FallingHeart(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, BrickerGameManager brickerGameManager) {
+    public FallingHeart(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
+                        BrickerGameManager brickerGameManager) {
         super(topLeftCorner, dimensions, renderable);
         this.brickerGameManager = brickerGameManager;
     }
 
+    /**
+     * a function that is called when there is a collision with this object
+     * @param other The GameObject with which a collision occurred.
+     * @param collision Information regarding this collision.
+     *                  A reasonable elastic behavior can be achieved with:
+     *                  setVelocity(getVelocity().flipped(collision.getNormal()));
+     */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         if (other.getTag().equals(brickerGameManager.getMainPaddleTag())){
