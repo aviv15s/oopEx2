@@ -281,6 +281,9 @@ public class BrickerGameManager extends GameManager {
         object.setVelocity(new Vector2(velX, velY));
     }
 
+    /**
+     * method called
+     */
     private void doOnBallExitScreen(){
         decreaseHearts();
         mainBall.setCenter(windowDimensions.mult(BALL_INITIAL_RELATIVE_TO_SCREEN));
