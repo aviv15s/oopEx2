@@ -55,12 +55,15 @@ public class Paddle  extends GameObject {
 
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
-        if (!other.getTag().equals(gameManager.getWallsTag())){
+        if (other.getTag().equals(gameManager.getBallTag()) || other.getTag().equals(gameManager.getPuckTag())){
             num_collisions += 1;
         }
         if (this.getTag().equals(ANOTHER_PADDLE_TAG) && num_collisions >= MAX_HITS_ANOTHER_PADDLE){
            gameManager.removeGameObject(this, gameManager.getPaddleLayer());
            gameManager.setExtraPaddle(false);
+        }
+        if (other.getTag().equals(gameManager.getHeartsTag())){
+            gameManager.onPaddleHitHeart(other);
         }
     }
 }
