@@ -27,10 +27,8 @@ public class BrickerGameManager extends GameManager {
     private final String PUCK_TAG = "puck";
     private final String MAIN_PADDLE_TAG = "main paddle";
     private final String ANOTHER_PADDLE_TAG = "another paddle";
-
     private final String MAIN_BALL_TAG = "main ball";
     private final String FALLING_HEART_TAG = "falling heart";
-    private final String WALLS_TAG = "";
     private final int BALLS_LAYER = Layer.DEFAULT;
     private final int PADDLE_LAYER = 50;
     private final int WALLS_LAYER = Layer.STATIC_OBJECTS;
@@ -38,16 +36,18 @@ public class BrickerGameManager extends GameManager {
     private final int HEARTS_LAYER = -50;
     private final int WALL_THICKNESS = 2;
     private final int MAX_HITS_BEFORE_CAMERA = 4;
-    private final int PADDLE_SPEED = 300;
+    private final float BALL_INITIAL_RELATIVE_TO_SCREEN = 0.5f;
     private final int BALL_SPEED = 250;
     private final Vector2 BALL_SIZE = new Vector2(50, 50);
     private final Vector2 PUCK_SIZE = BALL_SIZE.mult(0.75f);
     private final Vector2 PADDLE_SIZE = new Vector2(200, 20);
-    private final float BALL_INITIAL_RELATIVE_TO_SCREEN = 0.5f;
+    private final int PADDLE_SPEED = 300;
     private final float FALLING_HEART_SPEED = 100;
     private final float FALLING_HEART_SIZE = 30;
     private final int MAX_HEARTS = 4;
     private final int INITIAL_HEARTS = 3;
+    private final int MIN_NUM_HEARTS = 0;
+    private final int MIN_NUM_BRICKS_FOR_WIN = 0;
     private int currentHearts = INITIAL_HEARTS;
     private Counter bricksRemaining;
     private int numberOfRows, bricksPerRow;
@@ -296,7 +296,8 @@ public class BrickerGameManager extends GameManager {
     }
 
     /**
-     * method called
+     * Method called when ball left the screen.
+     * Decrease heart and add ball if need to play the game.
      */
     private void doOnBallExitScreen(){
         decreaseHearts();
@@ -304,6 +305,9 @@ public class BrickerGameManager extends GameManager {
         setObjectVelocityRandomDiagonal(mainBall, BALL_SPEED);
     }
 
+    /**
+     * This method add heart to user if num hearts is less than MAX_HEARTS.
+     */
     public void addHearts(){
         this.currentHearts++;
         if (this.currentHearts > MAX_HEARTS){
@@ -312,6 +316,10 @@ public class BrickerGameManager extends GameManager {
         graphics.updateHeartCount(this.currentHearts);
     }
 
+    /**
+     * Method that create heart and put it on specic location.
+     * @param center to put heart falling.
+     */
     public void createFallingHeartObject(Vector2 center){
         Renderable heartImage = imageSoundFactory.getImageObject(ImageType.HEART);
         GameObject heartObject = new FallingHeart(
@@ -325,15 +333,23 @@ public class BrickerGameManager extends GameManager {
         gameObjects().addGameObject(heartObject, HEARTS_LAYER);
     }
 
+    /**
+     * This Method decrease num of hearts and if life less-eq than MIN_NUM_HEARTS, asks if to play again or quit.
+     * Update the graphic accordingly.
+     */
     public void decreaseHearts(){
         this.currentHearts--;
-        if (this.currentHearts <= 0){
+        if (this.currentHearts <= MIN_NUM_HEARTS){
             boolean playAgain = graphics.showGameOverScreenAndReturnValue();
             restartGameOrExit(playAgain);
         }
         graphics.updateHeartCount(this.currentHearts);
     }
 
+    /**
+     * Asks the user if wants to play again.
+     * @param playAgain - true if wants another game, false otherwise.
+     */
     private void restartGameOrExit(boolean playAgain){
         if (playAgain){
             windowController.resetGame();
@@ -343,31 +359,40 @@ public class BrickerGameManager extends GameManager {
         }
     }
 
-    
+    /**
+     * Destroy brick, and checks if num Bricks is less than MIN_NUM_BRICKS_FOR_WIN.
+     * Callse
+      * @param brick - to delete from game.
+     */
     public void removeBrick(Brick brick) {
         gameObjects().removeGameObject(brick, BRICKS_LAYER);
         bricksRemaining.decrement();
-        if (bricksRemaining.value() <= 0) {
-            boolean playAgain = graphics.showGameWonScreenAndReturnValue();
-            if (playAgain){
-                windowController.resetGame();
-            }
-            else{
-                windowController.closeWindow();
-            }
+        if (bricksRemaining.value() <= MIN_NUM_BRICKS_FOR_WIN) {
+            restartGameOrExit(graphics.showGameWonScreenAndReturnValue());
         }
     }
 
+    /**
+     * method calles on object to follow with camera -
+     * only does something to ball objects if not already focused on something.
+     * @param gameObject - gameObject to follow via the camera.
+     */
     public void cameraFollowBall(GameObject gameObject) {
         if (gameObject.getTag().equals(MAIN_BALL_TAG)) {
             Ball ball = (Ball) gameObject;
             if (this.camera() == null) {
                 ballCollisionCounter = ball.getCollisionCounter();
-                setCamera(new Camera(ball, Vector2.ZERO, getWindowDimensions().mult(1.2f), getWindowDimensions()));
+                setCamera(new Camera(ball, Vector2.ZERO, getWindowDimensions().mult(1.2f),
+                        getWindowDimensions()));
             }
         }
     }
-    
+
+    /**
+     * Method that initialize  Puck.
+     * @param center place center of Puck created.
+     * @return puck created.
+     */
     public Ball initializePuck(Vector2 center) {
         Ball puck = new Ball(
                 Vector2.ZERO,
@@ -383,6 +408,10 @@ public class BrickerGameManager extends GameManager {
         return puck;
     }
 
+    /**
+     * Method that initialize extra Paddle if not exists one already.
+     * @param initialPlace - place to put the paddle
+     */
     public void addPaddle(Vector2 initialPlace) {
         if (!extraPaddle) {
             Paddle paddle = initializePaddle(initialPlace);
@@ -392,15 +421,29 @@ public class BrickerGameManager extends GameManager {
 
     }
 
+    /**
+     * Remove game object.
+     * @param gameObject - to remove
+     * @param layerId layer from which to delete.
+     * @return true if succeed else otherwise.
+     */
     public boolean removeGameObject(GameObject gameObject, int layerId) {
         return gameObjects().removeGameObject(gameObject, layerId);
     }
 
+    /**
+     * When paddle hit heart delete heart and calls addHeart method.
+     * @param heartObject - to remove
+     */
     public void onPaddleHitHeart(GameObject heartObject) {
         gameObjects().removeGameObject(heartObject, HEARTS_LAYER);
         addHearts();
     }
 
+    /**
+     *main function that runs the Bricks game wia all his glory.
+     * @param args argument given from the terminal.
+     */
     public static void main(String[] args) {
         int numberOfRows = 7, bricksPerRow = 8;
         if (args.length >= 1) {
@@ -414,43 +457,73 @@ public class BrickerGameManager extends GameManager {
         brickerGameManager.run();
     }
 
+    /**
+     * Get the PADDLE_LAYER.
+     * @return PADDLE_LAYER
+     */
     public int getPaddleLayer() {
         return PADDLE_LAYER;
     }
 
+    /**
+     * Set extraPaddle as b.
+     * @param b - which value to change to
+     */
     public void setExtraPaddle(boolean b) {
         extraPaddle = b;
     }
 
+    /**
+     * Get BRICKS_LAYER.
+     * @return BRICKS_LAYER
+     */
     public int getBricksLayer() {
         return BRICKS_LAYER;
     }
 
+    /**
+     * Get PADDLE_SPEED.
+     * @return PADDLE_SPEED
+     */
     public int getPaddleSpeed() {
         return PADDLE_SPEED;
     }
-    
+
+    /**
+     * Get windowDimensions.
+     * @return windowDimensions
+     */
     public Vector2 getWindowDimensions() {
         return windowDimensions;
     }
 
+    /**
+     * Get MAIN_BALL_TAG.
+     * @return MAIN_BALL_TAG
+     */
     public String getBallTag(){
         return MAIN_BALL_TAG;
     }
 
+    /**
+     * Get PUCK_TAG.
+     * @return PUCK_TAG
+     */
     public String getPuckTag(){
         return PUCK_TAG;
     }
 
-    public String getHeartsTag() {
-        return FALLING_HEART_TAG;
-    }
-
-
+    /** Get MAIN_PADDLE_TAG.
+     * @return MAIN_PADDLE_TAG
+     */
     public String getMainPaddleTag() {
         return MAIN_PADDLE_TAG;
     }
 
+    /**
+     * Get ANOTHER_PADDLE_TAG.
+     * @return ANOTHER_PADDLE_TAG
+     */
     public String getExtraPaddleTag() {
         return ANOTHER_PADDLE_TAG;
     }
