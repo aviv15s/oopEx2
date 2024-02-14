@@ -5,6 +5,10 @@ import bricker.main.BrickerGameManager;
 import bricker.main.ImageSoundFactory;
 import danogl.GameObject;
 
+/**
+ * Strategy of brick when getting hit. In this case it supposed to Create falling heart.
+ * @author aviv.shemesh, ram3108_
+ */
 public class LifeRecoveryCollisionStrategy implements CollisionStrategy{
     private BrickerGameManager brickerGameManager;
 
