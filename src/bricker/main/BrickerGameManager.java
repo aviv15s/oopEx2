@@ -122,9 +122,7 @@ public class BrickerGameManager extends GameManager {
         // initialize the walls colliders
         initializeWalls();
 
-        GameWrapper gameWrapper = new GameWrapper();
-        gameWrapper.initializeBackground(gameObjects(),
-                windowDimensions, imageSoundFactory.getImageObject(ImageType.BACKGROUND));
+
 
         initializeBricks(numberOfRows, bricksPerRow);
 
@@ -142,6 +140,10 @@ public class BrickerGameManager extends GameManager {
         graphics = new Graphics(windowController, imageSoundFactory, gameObjects());
         graphics.initializeLifeCounter(MAX_HEARTS, INITIAL_HEARTS);
         currentHearts = INITIAL_HEARTS;
+
+        // initialize background
+        graphics.initializeBackground(gameObjects(),
+                windowDimensions, imageSoundFactory.getImageObject(ImageType.BACKGROUND));
     }
     
     private Paddle initializePaddle(Vector2 initialPlace) {
