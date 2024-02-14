@@ -11,7 +11,7 @@ import danogl.util.Vector2;
 import java.awt.event.KeyEvent;
 
 public class Paddle  extends GameObject {
-    public static final String ANOTHER_PADDLE_TAG = "another paddle";
+    private static final String ANOTHER_PADDLE_TAG = "another paddle";
     private static final int MAX_HITS_ANOTHER_PADDLE = 4;
     private final UserInputListener inputListener;
     private final BrickerGameManager gameManager;

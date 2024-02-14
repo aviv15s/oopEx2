@@ -7,6 +7,11 @@ import danogl.gui.Sound;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import danogl.gui.ImageReader;
+
+/**
+ * This class is the class of the ball.
+ * The class extends GameObject class. and add some variables
+ */
 public class Ball extends GameObject {
     private final Sound collisionSound;
     private int collisionCounter = 0;
