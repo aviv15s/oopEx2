@@ -24,6 +24,7 @@ public class BrickerGameManager extends GameManager {
     private final float FALLING_HEART_SIZE = 30;
     private final String PUCK_TAG = "puck";
     private final String MAIN_BALL_TAG = "main ball";
+    private final String FALLING_HEART_TAG = "falling heart";
     private final int WALL_THICKNESS = 2;
     private final int MAX_HITS_BEFORE_CAMERA = 4;
     private final int BALL_SPEED = 250;
@@ -32,7 +33,7 @@ public class BrickerGameManager extends GameManager {
     private final Vector2 PADDLE_SIZE = new Vector2(200, 20);
     private final int PADDLE_SPEED = 300;
     private final int BALLS_LAYER = Layer.DEFAULT;
-    private final int PADDLE_LAYER = Layer.DEFAULT;
+    private final int PADDLE_LAYER = 50;
     private final int BRICKS_LAYER = Layer.STATIC_OBJECTS;
     private final int HEARTS_LAYER = -50;
     private final String WALLS_TAG = "";
@@ -51,7 +52,8 @@ public class BrickerGameManager extends GameManager {
     private Graphics graphics;
     private UserInputListener userInputListener;
     
-    public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int numberOfRows, int bricksPerRow) {
+    public BrickerGameManager(String windowTitle, Vector2 windowDimensions,
+                              int numberOfRows, int bricksPerRow) {
         super(windowTitle, windowDimensions);
         this.numberOfRows = numberOfRows;
         this.bricksPerRow = bricksPerRow;
@@ -79,7 +81,8 @@ public class BrickerGameManager extends GameManager {
         }
 
         // check if magic key "W" is pressed
-        if (userInputListener != null && userInputListener.wasKeyPressedThisFrame(KeyEvent.getExtendedKeyCodeForChar('w'))){
+        if (userInputListener != null && userInputListener.wasKeyPressedThisFrame(
+                KeyEvent.getExtendedKeyCodeForChar('w'))){
             boolean playAgain = graphics.showGameWonScreenAndReturnValue();
             restartGameOrExit(playAgain);
         }
@@ -87,7 +90,8 @@ public class BrickerGameManager extends GameManager {
     }
 
     @Override
-    public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener, WindowController windowController) {
+    public void initializeGame(ImageReader imageReader, SoundReader soundReader,
+                               UserInputListener inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         this.imageSoundFactory = new ImageSoundFactory(imageReader, soundReader);
         this.windowDimensions = windowController.getWindowDimensions();
@@ -96,14 +100,18 @@ public class BrickerGameManager extends GameManager {
         this.windowController = windowController;
         this.userInputListener = inputListener;
         //paddle
-        Paddle paddle = initializePaddle(new Vector2(windowDimensions.x() * 0.5f, windowDimensions.y() - 30));
+        Paddle paddle = initializePaddle(
+                new Vector2(
+                        windowDimensions.x() * 0.5f,
+                windowDimensions.y() - 30));
 
 
         // initialize the walls colliders
         initializeWalls();
 
         GameWrapper gameWrapper = new GameWrapper();
-        gameWrapper.initializeBackground(gameObjects(), windowDimensions, imageSoundFactory.getImageObject(ImageType.BACKGROUND));
+        gameWrapper.initializeBackground(gameObjects(),
+                windowDimensions, imageSoundFactory.getImageObject(ImageType.BACKGROUND));
 
         initializeBricks(numberOfRows, bricksPerRow);
 
@@ -112,8 +120,9 @@ public class BrickerGameManager extends GameManager {
         setObjectVelocityRandomDiagonal(ball, BALL_SPEED);
         mainBall = ball;
 
-        gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.STATIC_OBJECTS, false);
-        gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.DEFAULT, true);
+        gameObjects().layers().shouldLayersCollide(BRICKS_LAYER, BRICKS_LAYER, false);
+        gameObjects().layers().shouldLayersCollide(BRICKS_LAYER, BALLS_LAYER, true);
+        gameObjects().layers().shouldLayersCollide(BALLS_LAYER, PADDLE_LAYER, true);
         gameObjects().layers().shouldLayersCollide(HEARTS_LAYER, PADDLE_LAYER, true);
 
         // initialize graphics - hearts!
@@ -229,6 +238,7 @@ public class BrickerGameManager extends GameManager {
                 heartImage);
         heartObject.setCenter(center);
         heartObject.setVelocity(Vector2.DOWN.mult(FALLING_HEART_SPEED));
+        heartObject.setTag(FALLING_HEART_TAG);
         gameObjects().addGameObject(heartObject, HEARTS_LAYER);
     }
 
@@ -302,6 +312,11 @@ public class BrickerGameManager extends GameManager {
         return gameObjects().removeGameObject(gameObject, layerId);
     }
 
+    public void onPaddleHitHeart(GameObject heartObject) {
+        gameObjects().removeGameObject(heartObject, HEARTS_LAYER);
+        addHearts();
+    }
+
     public static void main(String[] args) {
         int numberOfRows = 7, bricksPerRow = 8;
         if (args.length >= 1) {
@@ -338,4 +353,18 @@ public class BrickerGameManager extends GameManager {
     public Vector2 getWindowDimensions() {
         return windowDimensions;
     }
+
+    public String getBallTag(){
+        return MAIN_BALL_TAG;
+    }
+
+    public String getPuckTag(){
+        return PUCK_TAG;
+    }
+
+    public String getHeartsTag() {
+        return FALLING_HEART_TAG;
+    }
+
+
 }
