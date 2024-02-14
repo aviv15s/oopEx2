@@ -260,7 +260,8 @@ public class BrickerGameManager extends GameManager {
     }
 
     /**
-     * Method that sets the given object velocity to random direction (in positive circle side) with given speed.
+     * Method that sets the given object velocity to random direction
+     * (in positive circle side) with given speed.
      * @param object - object to change speed of.
      * @param speed - size of speed to change to.
      */
@@ -330,7 +331,8 @@ public class BrickerGameManager extends GameManager {
     }
 
     /**
-     * This Method decrease num of hearts and if life less-eq than MIN_NUM_HEARTS, asks if to play again or quit.
+     * This Method decrease num of hearts and if life less-eq than
+     * MIN_NUM_HEARTS, asks if to play again or quit.
      * Update the graphic accordingly.
      */
     public void decreaseHearts(){

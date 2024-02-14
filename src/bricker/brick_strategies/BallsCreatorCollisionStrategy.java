@@ -20,7 +20,8 @@ public class BallsCreatorCollisionStrategy implements CollisionStrategy{
     }
 
     /**
-     * An override function that tells how our brick should act. In this case it supposed to create two new balls.
+     * An override function that tells how our brick should act.
+     * In this case it supposed to create two new balls.
      * @param gameObject1 - first object collision with
      * @param gameObject2 - second object collision with
      */

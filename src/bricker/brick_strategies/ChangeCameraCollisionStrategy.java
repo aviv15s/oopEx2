@@ -20,7 +20,8 @@ public class ChangeCameraCollisionStrategy implements CollisionStrategy{
     }
 
     /**
-     * An override function that tells how our brick should act. In this case it supposed to follow ball with Camera.
+     * An override function that tells how our brick should act.
+     * In this case it supposed to follow ball with Camera.
      * @param gameObject1 - first object collision with
      * @param gameObject2 - second object collision with
      */@Override
