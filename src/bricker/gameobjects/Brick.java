@@ -19,8 +19,6 @@ public class Brick extends GameObject{
         this.collsionStrategy = collisionStrategyFactory.collisionStrategy(this.gameManager);
     }
 
-//delete me
-
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);

@@ -26,6 +26,8 @@ import java.util.Random;
 public class BrickerGameManager extends GameManager {
     private final String PUCK_TAG = "puck";
     private final String MAIN_PADDLE_TAG = "main paddle";
+    private final String ANOTHER_PADDLE_TAG = "another paddle";
+
     private final String MAIN_BALL_TAG = "main ball";
     private final String FALLING_HEART_TAG = "falling heart";
     private final String WALLS_TAG = "";
@@ -107,6 +109,15 @@ public class BrickerGameManager extends GameManager {
             }
         }
 
+        // check if need to remove hearts
+        for (GameObject gameObject: gameObjects().objectsInLayer(HEARTS_LAYER)){
+            if (gameObject.getTag() == FALLING_HEART_TAG){
+                if (gameObject.getTopLeftCorner().y() >= windowDimensions.y()){
+                    gameObjects().removeGameObject(gameObject, HEARTS_LAYER);
+                }
+            }
+        }
+
         // check if magic key "W" is pressed
         if (userInputListener != null &&
                 userInputListener.wasKeyPressedThisFrame(KeyEvent.getExtendedKeyCodeForChar('w'))){
@@ -140,17 +151,16 @@ public class BrickerGameManager extends GameManager {
         this.windowController = windowController;
         this.userInputListener = inputListener;
         //paddle
-        initializePaddle(new Vector2(
+        Paddle mainPaddle = initializePaddle(new Vector2(
                 windowDimensions.x() * 0.5f,
-                windowDimensions.y() - 30)).setTag(MAIN_PADDLE_TAG);
+                windowDimensions.y() - 30));
+        mainPaddle.setTag(MAIN_PADDLE_TAG);
 
 
         // initialize the walls colliders
         initializeWalls();
 
-        GameWrapper gameWrapper = new GameWrapper();
-        gameWrapper.initializeBackground(gameObjects(),
-                windowDimensions, imageSoundFactory.getImageObject(ImageType.BACKGROUND));
+
 
         initializeBricks(numberOfRows, bricksPerRow);
 
@@ -168,6 +178,10 @@ public class BrickerGameManager extends GameManager {
         graphics = new Graphics(windowController, imageSoundFactory, gameObjects());
         graphics.initializeLifeCounter(MAX_HEARTS, INITIAL_HEARTS);
         currentHearts = INITIAL_HEARTS;
+
+        // initialize background
+        graphics.initializeBackground(gameObjects(),
+                windowDimensions, imageSoundFactory.getImageObject(ImageType.BACKGROUND));
     }
 
     /**
@@ -300,10 +314,11 @@ public class BrickerGameManager extends GameManager {
 
     public void createFallingHeartObject(Vector2 center){
         Renderable heartImage = imageSoundFactory.getImageObject(ImageType.HEART);
-        GameObject heartObject = new GameObject(
+        GameObject heartObject = new FallingHeart(
                 Vector2.ZERO,
                 Vector2.ONES.mult(FALLING_HEART_SIZE),
-                heartImage);
+                heartImage,
+                this);
         heartObject.setCenter(center);
         heartObject.setVelocity(Vector2.DOWN.mult(FALLING_HEART_SPEED));
         heartObject.setTag(FALLING_HEART_TAG);
@@ -370,7 +385,8 @@ public class BrickerGameManager extends GameManager {
 
     public void addPaddle(Vector2 initialPlace) {
         if (!extraPaddle) {
-            initializePaddle(initialPlace).setLabelAnotherPaddle();
+            Paddle paddle = initializePaddle(initialPlace);
+            paddle.setTag(ANOTHER_PADDLE_TAG);
             extraPaddle = true;
         }
 
@@ -431,4 +447,11 @@ public class BrickerGameManager extends GameManager {
     }
 
 
+    public String getMainPaddleTag() {
+        return MAIN_PADDLE_TAG;
+    }
+
+    public String getExtraPaddleTag() {
+        return ANOTHER_PADDLE_TAG;
+    }
 }

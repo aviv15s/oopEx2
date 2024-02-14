@@ -16,7 +16,7 @@ public class CollisionStrategyFactory {
         CollsionStrategy[] arrCollisionStrategy = new CollsionStrategy[MAX_DOUBLE_BEHAVIORS];
         Random rand = new Random();
 //        int randInt = rand.nextInt(RANDOM_MAX);
-        int randInt = 3;
+        int randInt = 2;
 
         if(randInt == DOUBLE_BEHAVIOR){
             setCaseDouble(rand, arrCollisionStrategy,gameManager);

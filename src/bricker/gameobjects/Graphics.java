@@ -6,6 +6,7 @@ import bricker.main.ImageType;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
+import danogl.components.CoordinateSpace;
 import danogl.gui.ImageReader;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Renderable;
@@ -87,6 +88,14 @@ public class Graphics {
 
     public boolean showGameWonScreenAndReturnValue(){
         return windowController.openYesNoDialog("You Win! Play again?");
+    }
+
+    public void initializeBackground(GameObjectCollection gameObjects, Vector2 windowDimensions, Renderable backgroundImage){
+        GameObject background = new GameObject(Vector2.ZERO,
+                windowDimensions,
+                backgroundImage);
+        gameObjects.addGameObject(background, -200);
+        background.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
     }
 
 }
