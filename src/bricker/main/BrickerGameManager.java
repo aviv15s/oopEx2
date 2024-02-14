@@ -376,4 +376,7 @@ public class BrickerGameManager extends GameManager {
     }
 
 
+    public String getPaddleTag() {
+        return MAIN_PADDLE_TAG;
+    }
 }
