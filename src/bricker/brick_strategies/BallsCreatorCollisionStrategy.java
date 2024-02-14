@@ -3,6 +3,10 @@ package bricker.brick_strategies;
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 
+/**
+ * Class for puck collision strategy
+ * @author aviv.shemsh, ram3108_
+ */
 public class BallsCreatorCollisionStrategy implements CollsionStrategy{
 
     private BrickerGameManager gameManager;
@@ -17,8 +21,8 @@ public class BallsCreatorCollisionStrategy implements CollsionStrategy{
 
     /**
      * An override function that tells how our brick should act. In this case it supposed to create two new balls.
-     * @param gameObject1
-     * @param gameObject2
+     * @param gameObject1 - first object collision with
+     * @param gameObject2 - second object collision with
      */
     @Override
     public void onCollision(GameObject gameObject1, GameObject gameObject2) {

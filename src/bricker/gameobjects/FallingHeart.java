@@ -7,7 +7,8 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 /**
- * A class that represents a falling heart object used to revive player
+ * A class that represents a falling heart object used to revive player.
+ * @author aviv.shemsh, ram3108_
  */
 public class FallingHeart extends GameObject {
     private BrickerGameManager brickerGameManager;

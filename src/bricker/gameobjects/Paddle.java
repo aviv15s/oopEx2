@@ -10,7 +10,7 @@ import danogl.util.Vector2;
 import java.awt.event.KeyEvent;
 
 /**
- * a class for the paddle object
+ * Class for the paddle object
  * @author aviv.shemesh, ram3108_
  */
 public class Paddle  extends GameObject {

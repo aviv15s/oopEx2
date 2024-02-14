@@ -5,9 +5,19 @@ import danogl.gui.Sound;
 import danogl.gui.SoundReader;
 import danogl.gui.rendering.Renderable;
 
+/**
+ * ImageSoundFactory to pick sound and image.
+ * @author aviv.shemesh, ran3108_
+ */
 public class ImageSoundFactory {
     private final ImageReader imageReader;
     private final SoundReader soundReader;
+
+    /**
+     * Constructor for ImageSoundFactory.
+     * @param imageReader - imageReader object to look with.
+     * @param soundReader - soundReader object to look with.
+     */
 
     public ImageSoundFactory(ImageReader imageReader, SoundReader soundReader){
         this.imageReader = imageReader;
@@ -38,7 +48,7 @@ public class ImageSoundFactory {
     }
 
     /**
-     * Generates a Sound object for a desired classs of objects
+     * Generates a Sound object for a desired class of objects.
      * @param soundType enum representing the sound
      * @return sound object or null if soundType is invalid
      */

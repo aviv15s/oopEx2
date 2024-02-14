@@ -14,7 +14,8 @@ import danogl.util.Vector2;
 import java.awt.*;
 
 /**
- * a function that holds graphics function for displaying gui
+ * Class that holds graphics function for displaying gui.
+ * @author aviv.shemsh, ram3108_
  */
 public class Graphics {
     private final int HEART_SIZE = 20;

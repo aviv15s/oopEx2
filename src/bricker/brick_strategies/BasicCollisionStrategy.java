@@ -16,12 +16,11 @@ public class BasicCollisionStrategy implements CollsionStrategy{
     }
 
     /**
-     *
-     * @param gameObject1
-     * @param gameObject2
+     * An override function that tells how our brick should act. In this case it supposed to nothing
+     * @param gameObject1 - first object collision with
+     * @param gameObject2 - second object collision with
      */
     @Override
     public void onCollision(GameObject gameObject1, GameObject gameObject2) {
-        gameManager.removeGameObject(gameObject1, gameManager.getBricksLayer());
     }
 }

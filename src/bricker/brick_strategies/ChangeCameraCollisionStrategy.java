@@ -15,8 +15,5 @@ public class ChangeCameraCollisionStrategy implements CollsionStrategy{
     public void onCollision(GameObject gameObject1, GameObject gameObject2) {
         gameManager.cameraFollowBall(gameObject2);
 
-
-
-
     }
 }
