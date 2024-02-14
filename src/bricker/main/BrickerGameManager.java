@@ -13,7 +13,7 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 import bricker.brick_strategies.BasicCollisionStrategy;
-import bricker.brick_strategies.CollsionStrategy;
+import bricker.brick_strategies.CollisionStrategy;
 
 import java.awt.event.KeyEvent;
 import java.util.Random;

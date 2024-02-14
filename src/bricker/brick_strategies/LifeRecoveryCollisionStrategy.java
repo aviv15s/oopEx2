@@ -5,7 +5,7 @@ import bricker.main.BrickerGameManager;
 import bricker.main.ImageSoundFactory;
 import danogl.GameObject;
 
-public class LifeRecoveryCollisionStrategy implements CollsionStrategy{
+public class LifeRecoveryCollisionStrategy implements CollisionStrategy{
     private BrickerGameManager brickerGameManager;
 
     /**

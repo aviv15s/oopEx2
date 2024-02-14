@@ -6,7 +6,7 @@ import danogl.GameObject;
 import danogl.gui.rendering.Camera;
 import danogl.util.Vector2;
 
-public class ChangeCameraCollisionStrategy implements CollsionStrategy{
+public class ChangeCameraCollisionStrategy implements CollisionStrategy{
     private BrickerGameManager gameManager;
     public ChangeCameraCollisionStrategy(BrickerGameManager gameManager) {
         this.gameManager = gameManager;

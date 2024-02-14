@@ -4,7 +4,7 @@ import danogl.GameObject;
 import danogl.collisions.Layer;
 import bricker.main.BrickerGameManager;
 
-public class BasicCollisionStrategy implements CollsionStrategy{
+public class BasicCollisionStrategy implements CollisionStrategy{
     private BrickerGameManager gameManager;
 
     /**

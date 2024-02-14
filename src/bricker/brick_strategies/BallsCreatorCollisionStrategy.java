@@ -7,7 +7,7 @@ import danogl.GameObject;
  * Class for puck collision strategy
  * @author aviv.shemsh, ram3108_
  */
-public class BallsCreatorCollisionStrategy implements CollsionStrategy{
+public class BallsCreatorCollisionStrategy implements CollisionStrategy{
 
     private BrickerGameManager gameManager;
 

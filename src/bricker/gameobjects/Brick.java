@@ -6,7 +6,7 @@ import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import bricker.brick_strategies.CollsionStrategy;
+import bricker.brick_strategies.CollisionStrategy;
 
 /**
  * A class that represents a brick in the game which is static and does something when hit by a ball.
@@ -14,7 +14,7 @@ import bricker.brick_strategies.CollsionStrategy;
  * @author aviv.shemesh, ram3108_
  */
 public class Brick extends GameObject {
-    private CollsionStrategy[] collsionStrategy;
+    private CollisionStrategy[] CollisionStrategy;
     private boolean isHit = false;
     private final BrickerGameManager gameManager;
 
@@ -31,7 +31,7 @@ public class Brick extends GameObject {
         super(topLeftCorner, dimensions, renderable);
         this.gameManager = gameManager;
         CollisionStrategyFactory collisionStrategyFactory = new CollisionStrategyFactory();
-        this.collsionStrategy = collisionStrategyFactory.collisionStrategy(this.gameManager);
+        this.CollisionStrategy = collisionStrategyFactory.collisionStrategy(this.gameManager);
     }
 
     /**
@@ -49,9 +49,9 @@ public class Brick extends GameObject {
             return;
         }
         isHit = true;
-        for (int i = 0; i < collsionStrategy.length; i++) {
-            if (collsionStrategy[i] != null) {
-                collsionStrategy[i].onCollision(this, other);
+        for (int i = 0; i < CollisionStrategy.length; i++) {
+            if (CollisionStrategy[i] != null) {
+                CollisionStrategy[i].onCollision(this, other);
             }
         }
         gameManager.removeBrick(this);

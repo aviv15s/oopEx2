@@ -27,8 +27,8 @@ public class CollisionStrategyFactory {
      * @param gameManager the game manager
      * @return an array of Collision Strategies, such that each cell is either a collision strategy or null.
      */
-    public CollsionStrategy[] collisionStrategy(BrickerGameManager gameManager){
-        CollsionStrategy[] arrCollisionStrategy = new CollsionStrategy[MAX_DOUBLE_BEHAVIORS];
+    public CollisionStrategy[] collisionStrategy(BrickerGameManager gameManager){
+        CollisionStrategy[] arrCollisionStrategy = new CollisionStrategy[MAX_DOUBLE_BEHAVIORS];
         Random rand = new Random();
         int randInt = rand.nextInt(RANDOM_MAX);
 
@@ -48,7 +48,7 @@ public class CollisionStrategyFactory {
      * @param arrCollisionStrategy the array in which to fill
      * @param gameManager the game manager
      */
-    private void setCaseDouble(Random rand,CollsionStrategy[] arrCollisionStrategy, BrickerGameManager gameManager){
+    private void setCaseDouble(Random rand,CollisionStrategy[] arrCollisionStrategy, BrickerGameManager gameManager){
         int randInt;
         int index = 0;
         int numToFill = 2;
@@ -74,7 +74,7 @@ public class CollisionStrategyFactory {
      * @param arrCollisionStrategy the array to fill
      * @param gameManager the game manager
      */
-    private void setCollisionStrategyIndex(int randInt,int index,CollsionStrategy[] arrCollisionStrategy, BrickerGameManager gameManager){
+    private void setCollisionStrategyIndex(int randInt,int index,CollisionStrategy[] arrCollisionStrategy, BrickerGameManager gameManager){
         switch (randInt){
             case BALLS_CREATOR:
                 arrCollisionStrategy[index] = new BallsCreatorCollisionStrategy(gameManager);

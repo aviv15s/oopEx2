@@ -1,14 +1,13 @@
 package bricker.brick_strategies;
 
 import danogl.GameObject;
-import danogl.collisions.Layer;
 
 /**
  * Interface for collisions strategies.
  * @author aviv.shemsh, ram3108_
  */
 
-public interface CollsionStrategy {
+public interface CollisionStrategy {
     /**
      * An override function that tells how our brick should act.
      * @param gameObject1 - first object collision with

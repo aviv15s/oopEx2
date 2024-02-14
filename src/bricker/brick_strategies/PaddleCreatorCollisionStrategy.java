@@ -6,7 +6,7 @@ import danogl.GameManager;
 import danogl.GameObject;
 import danogl.util.Vector2;
 
-public class PaddleCreatorCollisionStrategy implements CollsionStrategy{
+public class PaddleCreatorCollisionStrategy implements CollisionStrategy{
     private BrickerGameManager gameManager;
 
     /**
