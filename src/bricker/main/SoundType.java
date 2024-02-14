@@ -4,5 +4,5 @@ package bricker.main;
  * @author aviv.shemsh, ram3108_
  */
 public enum SoundType {
-    BLOP
+    BLOP/**blop enum*/
 }
