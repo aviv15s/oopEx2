@@ -13,7 +13,6 @@ public class ChangeCameraCollisionStrategy implements CollsionStrategy{
     }
     @Override
     public void onCollision(GameObject gameObject1, GameObject gameObject2) {
-        gameManager.cameraFollowBall(gameObject1);
         gameManager.cameraFollowBall(gameObject2);
 
 
