@@ -16,6 +16,5 @@ public class LifeRecoveryCollisionStrategy implements CollsionStrategy{
     @Override
     public void onCollision(GameObject gameObject1, GameObject gameObject2) {
         brickerGameManager.createFallingHeartObject(gameObject1.getCenter());
-        System.out.println("created heart!");
     }
 }

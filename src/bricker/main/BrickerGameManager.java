@@ -124,7 +124,6 @@ public class BrickerGameManager extends GameManager {
             boolean playAgain = graphics.showGameWonScreenAndReturnValue();
             restartGameOrExit(playAgain);
         }
-
     }
 
     /**
@@ -228,9 +227,7 @@ public class BrickerGameManager extends GameManager {
      */
     private void initializeBricks(int numberOfRows, int bricksPerRow) {
         bricksRemaining = new Counter(numberOfRows * bricksPerRow);
-        CollsionStrategy collsionStrategy = new BasicCollisionStrategy(this);
         Renderable brickImage = imageSoundFactory.getImageObject(ImageType.BRICK);
-
         int brickWidth = (int) windowDimensions.x() / bricksPerRow;
         int brickHeight = 15;
 
@@ -240,7 +237,7 @@ public class BrickerGameManager extends GameManager {
                 GameObject brick = new Brick(brickLocation,
                         new Vector2(brickWidth, brickHeight),
                         brickImage,
-                        collsionStrategy, this);
+                        this);
                 gameObjects().addGameObject(brick, BRICKS_LAYER);
             }
         }
@@ -255,8 +252,7 @@ public class BrickerGameManager extends GameManager {
                 Vector2.ZERO,
                 new Vector2(BALL_SIZE),
                 imageSoundFactory.getImageObject(ImageType.BALL),
-                imageSoundFactory.getSoundObject(SoundType.BLOP),
-                this
+                imageSoundFactory.getSoundObject(SoundType.BLOP)
         );
         gameObjects().addGameObject(ball, BALLS_LAYER);
         ball.setTag(MAIN_BALL_TAG);
@@ -373,8 +369,7 @@ public class BrickerGameManager extends GameManager {
                 Vector2.ZERO,
                 new Vector2(PUCK_SIZE),
                 imageSoundFactory.getImageObject(ImageType.PUCK),
-                imageSoundFactory.getSoundObject(SoundType.BLOP),
-                this
+                imageSoundFactory.getSoundObject(SoundType.BLOP)
         );
         puck.setCenter(center);
         setObjectVelocityRandomDirection(puck, BALL_SPEED);
