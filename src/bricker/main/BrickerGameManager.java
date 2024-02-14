@@ -21,6 +21,7 @@ import java.util.Random;
 /**
  * BrickerGameManager is a class that allow us to play the game "Bricker".
  * This class extends GameManager and adds some functions to fit the interface for this game.
+ * @author aviv.shemesh, ram3108_
  */
 public class BrickerGameManager extends GameManager {
     private final String PUCK_TAG = "puck";
@@ -28,18 +29,19 @@ public class BrickerGameManager extends GameManager {
     private final String MAIN_BALL_TAG = "main ball";
     private final String FALLING_HEART_TAG = "falling heart";
     private final String WALLS_TAG = "";
+    private final int BALLS_LAYER = Layer.DEFAULT;
+    private final int PADDLE_LAYER = 50;
+    private final int WALLS_LAYER = Layer.STATIC_OBJECTS;
+    private final int BRICKS_LAYER = Layer.STATIC_OBJECTS;
+    private final int HEARTS_LAYER = -50;
     private final int WALL_THICKNESS = 2;
     private final int MAX_HITS_BEFORE_CAMERA = 4;
+    private final int PADDLE_SPEED = 300;
     private final int BALL_SPEED = 250;
     private final Vector2 BALL_SIZE = new Vector2(50, 50);
     private final Vector2 PUCK_SIZE = BALL_SIZE.mult(0.75f);
     private final Vector2 PADDLE_SIZE = new Vector2(200, 20);
-    private final int PADDLE_SPEED = 300;
-    private final int BALLS_LAYER = Layer.DEFAULT;
-    private final int PADDLE_LAYER = 50;
     private final float BALL_INITIAL_RELATIVE_TO_SCREEN = 0.5f;
-    private final int BRICKS_LAYER = Layer.STATIC_OBJECTS;
-    private final int HEARTS_LAYER = -50;
     private final float FALLING_HEART_SPEED = 100;
     private final float FALLING_HEART_SIZE = 30;
     private final int MAX_HEARTS = 4;
@@ -56,13 +58,33 @@ public class BrickerGameManager extends GameManager {
     private boolean extraPaddle = false;
     private Graphics graphics;
     private UserInputListener userInputListener;
-    
+
+    /**
+     * Constructor for BrickerGameManager class.
+     * @param windowTitle - name of the window that will be opened.
+     * @param windowDimensions - dimensions of the window that will be opened.
+     * @param numberOfRows - num row of bricks.
+     * @param bricksPerRow - num bricks in each row.
+     */
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions,
                               int numberOfRows, int bricksPerRow) {
         super(windowTitle, windowDimensions);
         this.numberOfRows = numberOfRows;
         this.bricksPerRow = bricksPerRow;
     }
+
+    /**
+     * This function override the update function in GameManager and do several things.
+     * 1.Cals the GameManager update. 2.Checks if there is a need to restart the camera view.
+     * 3.Checks if heart is out of bound and cals function to handel. 4.Check if need to remove pucks and.
+     * 5.Checks if User wants to exit Game.
+     * @param deltaTime The time, in seconds, that passed since the last invocation
+     *                  of this method (i.e., since the last frame). This is useful
+     *                  for either accumulating the total time that passed since some
+     *                  event, or for physics integration (i.e., multiply this by
+     *                  the acceleration to get an estimate of the added velocity or
+     *                  by the velocity to get an estimate of the difference in position).
+     */
 
     @Override
     public void update(float deltaTime) {
@@ -94,6 +116,19 @@ public class BrickerGameManager extends GameManager {
 
     }
 
+    /**
+     * This method override the GameManager initialize.
+     * Initial the game objects and several other important private variables for the class.
+     * @param imageReader Contains a single method: readImage, which reads an image from disk.
+     *                 See its documentation for help.
+     * @param soundReader Contains a single method: readSound, which reads a wav file from
+     *                    disk. See its documentation for help.
+     * @param inputListener Contains a single method: isKeyPressed, which returns whether
+     *                      a given key is currently pressed by the user or not. See its
+     *                      documentation.
+     * @param windowController Contains an array of helpful, self explanatory methods
+     *                         concerning the window.
+     */
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
@@ -134,7 +169,12 @@ public class BrickerGameManager extends GameManager {
         graphics.initializeLifeCounter(MAX_HEARTS, INITIAL_HEARTS);
         currentHearts = INITIAL_HEARTS;
     }
-    
+
+    /**
+     * This method creates a Paddle object.
+     * @param initialPlace -  the place to put the paddle.
+     * @return paddle object.
+     */
     private Paddle initializePaddle(Vector2 initialPlace) {
         Renderable paddleImage = imageSoundFactory.getImageObject(ImageType.PADDLE);
         Paddle paddle = new Paddle(
@@ -146,24 +186,32 @@ public class BrickerGameManager extends GameManager {
         gameObjects().addGameObject(paddle, PADDLE_LAYER);
         return paddle;
     }
-    
+
+    /**
+     * This method initial the walls using some constants of the class.
+     */
     private void initializeWalls() {
         GameObject wallLeft = new GameObject(new Vector2(-WALL_THICKNESS, 0),
                 new Vector2(WALL_THICKNESS, windowDimensions.y()),
                 null);
-        gameObjects().addGameObject(wallLeft, Layer.STATIC_OBJECTS);
+        gameObjects().addGameObject(wallLeft,WALLS_LAYER);
 
         GameObject wallUp = new GameObject(Vector2.ZERO,
                 new Vector2(windowDimensions.x(), WALL_THICKNESS),
                 null);
-        gameObjects().addGameObject(wallUp, Layer.STATIC_OBJECTS);
+        gameObjects().addGameObject(wallUp, WALLS_LAYER);
 
         GameObject wallRight = new GameObject(new Vector2(windowDimensions.x(), 0),
                 new Vector2(WALL_THICKNESS, windowDimensions.x()),
                 null);
-        gameObjects().addGameObject(wallRight, Layer.STATIC_OBJECTS);
+        gameObjects().addGameObject(wallRight, WALLS_LAYER);
     }
 
+    /**
+     * Method to initial the bricks in the game, with amount in each axis.
+     * @param numberOfRows - amount of row bricks.
+     * @param bricksPerRow - amount of bricks in each row.
+     */
     private void initializeBricks(int numberOfRows, int bricksPerRow) {
         bricksRemaining = new Counter(numberOfRows * bricksPerRow);
         CollsionStrategy collsionStrategy = new BasicCollisionStrategy(this);
@@ -179,11 +227,15 @@ public class BrickerGameManager extends GameManager {
                         new Vector2(brickWidth, brickHeight),
                         brickImage,
                         collsionStrategy, this);
-                gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
+                gameObjects().addGameObject(brick, BRICKS_LAYER);
             }
         }
     }
 
+    /**
+     * Method that initial ball in game.
+     * @return Ball created.
+     */
     private Ball initializeBall() {
         Ball ball = new Ball(
                 Vector2.ZERO,
@@ -197,6 +249,11 @@ public class BrickerGameManager extends GameManager {
         return ball;
     }
 
+    /**
+     * Method that sets the given object velocity to random direction (in positive circle side) with given speed.
+     * @param object - object to change speed of.
+     * @param speed - size of speed to change to.
+     */
     private void setObjectVelocityRandomDirection(GameObject object, float speed) {
         Random random = new Random();
         double angle = random.nextDouble() * Math.PI;
@@ -206,6 +263,11 @@ public class BrickerGameManager extends GameManager {
         object.setVelocity(velocity);
     }
 
+    /**
+     * Method that sets the given object velocity to random direction (in diagonal) with given speed.
+     * @param object - object to change speed of.
+     * @param speed - size of speed to change to.
+     */
     private void setObjectVelocityRandomDiagonal(GameObject object, float speed) {
         Random random = new Random();
         float speedOnEachAxis = speed / (float) Math.sqrt(2);
@@ -221,7 +283,7 @@ public class BrickerGameManager extends GameManager {
 
     private void doOnBallExitScreen(){
         decreaseHearts();
-        mainBall.setCenter(windowDimensions.mult(0.5f));
+        mainBall.setCenter(windowDimensions.mult(BALL_INITIAL_RELATIVE_TO_SCREEN));
         setObjectVelocityRandomDiagonal(mainBall, BALL_SPEED);
     }
 
@@ -347,10 +409,6 @@ public class BrickerGameManager extends GameManager {
 
     public int getPaddleSpeed() {
         return PADDLE_SPEED;
-    }
-
-    public String getWallsTag() {
-        return WALLS_TAG;
     }
     
     public Vector2 getWindowDimensions() {
