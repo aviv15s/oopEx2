@@ -25,6 +25,8 @@ import java.util.Random;
 public class BrickerGameManager extends GameManager {
     private final String PUCK_TAG = "puck";
     private final String MAIN_PADDLE_TAG = "main paddle";
+    private final String ANOTHER_PADDLE_TAG = "another paddle";
+
     private final String MAIN_BALL_TAG = "main ball";
     private final String FALLING_HEART_TAG = "falling heart";
     private final String WALLS_TAG = "";
@@ -114,9 +116,10 @@ public class BrickerGameManager extends GameManager {
         this.windowController = windowController;
         this.userInputListener = inputListener;
         //paddle
-        initializePaddle(new Vector2(
+        Paddle mainPaddle = initializePaddle(new Vector2(
                 windowDimensions.x() * 0.5f,
-                windowDimensions.y() - 30)).setTag(MAIN_PADDLE_TAG);
+                windowDimensions.y() - 30));
+        mainPaddle.setTag(MAIN_PADDLE_TAG);
 
 
         // initialize the walls colliders
@@ -317,7 +320,8 @@ public class BrickerGameManager extends GameManager {
 
     public void addPaddle(Vector2 initialPlace) {
         if (!extraPaddle) {
-            initializePaddle(initialPlace).setLabelAnotherPaddle();
+            Paddle paddle = initializePaddle(initialPlace);
+            paddle.setTag(ANOTHER_PADDLE_TAG);
             extraPaddle = true;
         }
 
@@ -384,5 +388,9 @@ public class BrickerGameManager extends GameManager {
 
     public String getMainPaddleTag() {
         return MAIN_PADDLE_TAG;
+    }
+
+    public String getExtraPaddleTag() {
+        return ANOTHER_PADDLE_TAG;
     }
 }

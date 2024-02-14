@@ -11,7 +11,6 @@ import danogl.util.Vector2;
 import java.awt.event.KeyEvent;
 
 public class Paddle  extends GameObject {
-    private static final String ANOTHER_PADDLE_TAG = "another paddle";
     private static final int MAX_HITS_ANOTHER_PADDLE = 4;
     private final UserInputListener inputListener;
     private final BrickerGameManager gameManager;
@@ -27,10 +26,6 @@ public class Paddle  extends GameObject {
         this.inputListener = inputListener;
         this.gameManager = gameManager;
         this.num_collisions = 0;
-    }
-    public void setLabelAnotherPaddle(){
-        this.setTag(ANOTHER_PADDLE_TAG);
-
     }
     @Override
     public void update(float deltaTime){
@@ -58,7 +53,7 @@ public class Paddle  extends GameObject {
         if (other.getTag().equals(gameManager.getBallTag()) || other.getTag().equals(gameManager.getPuckTag())){
             num_collisions += 1;
         }
-        if (this.getTag().equals(ANOTHER_PADDLE_TAG) && num_collisions >= MAX_HITS_ANOTHER_PADDLE){
+        if (this.getTag().equals(gameManager.getExtraPaddleTag()) && num_collisions >= MAX_HITS_ANOTHER_PADDLE){
            gameManager.removeGameObject(this, gameManager.getPaddleLayer());
            gameManager.setExtraPaddle(false);
         }
