@@ -20,6 +20,8 @@ import java.util.Random;
 
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class BrickerGameManager extends GameManager {
+    private final float FALLING_HEART_SPEED = 100;
+    private final float FALLING_HEART_SIZE = 30;
     private final String PUCK_TAG = "puck";
     private final String MAIN_BALL_TAG = "main ball";
     private final int WALL_THICKNESS = 2;
@@ -32,6 +34,7 @@ public class BrickerGameManager extends GameManager {
     private final int BALLS_LAYER = Layer.DEFAULT;
     private final int PADDLE_LAYER = Layer.DEFAULT;
     private final int BRICKS_LAYER = Layer.STATIC_OBJECTS;
+    private final int HEARTS_LAYER = -50;
     private final String WALLS_TAG = "";
     private final int MAX_HEARTS = 4;
     private final int INITIAL_HEARTS = 3;
@@ -71,7 +74,6 @@ public class BrickerGameManager extends GameManager {
             if (gameObject.getTag() == PUCK_TAG){
                 if (gameObject.getTopLeftCorner().y() >= windowDimensions.y()){
                     gameObjects().removeGameObject(gameObject, BALLS_LAYER);
-                    System.out.println("Deleted Puck!");
                 }
             }
         }
@@ -112,6 +114,7 @@ public class BrickerGameManager extends GameManager {
 
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.STATIC_OBJECTS, false);
         gameObjects().layers().shouldLayersCollide(Layer.STATIC_OBJECTS, Layer.DEFAULT, true);
+        gameObjects().layers().shouldLayersCollide(HEARTS_LAYER, PADDLE_LAYER, true);
 
         // initialize graphics - hearts!
         graphics = new Graphics(windowController, imageSoundFactory, gameObjects());
@@ -205,14 +208,37 @@ public class BrickerGameManager extends GameManager {
     }
 
     private void doOnBallExitScreen(){
-        currentHearts--;
-        if (currentHearts == 0){
+        decreaseHearts();
+        mainBall.setCenter(windowDimensions.mult(0.5f));
+        setObjectVelocityRandomDiagonal(mainBall, BALL_SPEED);
+    }
+
+    public void addHearts(){
+        this.currentHearts++;
+        if (this.currentHearts > MAX_HEARTS){
+            this.currentHearts = MAX_HEARTS;
+        }
+        graphics.updateHeartCount(this.currentHearts);
+    }
+
+    public void createFallingHeartObject(Vector2 center){
+        Renderable heartImage = imageSoundFactory.getImageObject(ImageType.HEART);
+        GameObject heartObject = new GameObject(
+                Vector2.ZERO,
+                Vector2.ONES.mult(FALLING_HEART_SIZE),
+                heartImage);
+        heartObject.setCenter(center);
+        heartObject.setVelocity(Vector2.DOWN.mult(FALLING_HEART_SPEED));
+        gameObjects().addGameObject(heartObject, HEARTS_LAYER);
+    }
+
+    public void decreaseHearts(){
+        this.currentHearts--;
+        if (this.currentHearts <= 0){
             boolean playAgain = graphics.showGameOverScreenAndReturnValue();
             restartGameOrExit(playAgain);
         }
-        graphics.updateHeartCount(currentHearts);
-        mainBall.setCenter(windowDimensions.mult(0.5f));
-        setObjectVelocityRandomDiagonal(mainBall, BALL_SPEED);
+        graphics.updateHeartCount(this.currentHearts);
     }
 
     private void restartGameOrExit(boolean playAgain){

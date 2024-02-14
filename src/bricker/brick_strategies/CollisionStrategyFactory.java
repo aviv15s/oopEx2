@@ -15,7 +15,8 @@ public class CollisionStrategyFactory {
     public CollsionStrategy[] collisionStrategy(BrickerGameManager gameManager){
         CollsionStrategy[] arrCollisionStrategy = new CollsionStrategy[MAX_DOUBLE_BEHAVIORS];
         Random rand = new Random();
-        int randInt = rand.nextInt(RANDOM_MAX);
+//        int randInt = rand.nextInt(RANDOM_MAX);
+        int randInt = 3;
 
         if(randInt == DOUBLE_BEHAVIOR){
             setCaseDouble(rand, arrCollisionStrategy,gameManager);
@@ -53,7 +54,7 @@ public class CollisionStrategyFactory {
         } else if(randInt == CHANGE_CAMERA){
             arrCollisionStrategy[index] = new ChangeCameraCollisionStrategy(gameManager);
         } else if (randInt == LIFE_RECOVERY) {
-//            arrCollisionStrategy[index] = new LifeRecoveryCollisionStrategy(gameManager);
+            arrCollisionStrategy[index] = new LifeRecoveryCollisionStrategy(gameManager);
         }
         else {
             arrCollisionStrategy[index] = new BasicCollisionStrategy(gameManager);
