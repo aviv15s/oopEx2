@@ -58,4 +58,8 @@ The factory makes sure that the probabilities are correct and that the amount of
 
 
 5. API Changes:
-Of course we added classes that were not
+Of course we added classes that were not originally in the API because there are more complex behaviours in
+this version of the game.
+We updated the class Paddle to override onCollisionEnter to be able to check when the paddle hits a ball
+or puck in order to know if the paddle needs to be deleted by the game manager (if its an additional one).
+In the Game Manager we
