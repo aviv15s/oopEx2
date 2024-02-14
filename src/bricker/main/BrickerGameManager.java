@@ -18,13 +18,16 @@ import bricker.brick_strategies.CollsionStrategy;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+/**
+ * BrickerGameManager is a class that allow us to play the game "Bricker".
+ * This class extends GameManager and adds some functions to fit the interface for this game.
+ */
 public class BrickerGameManager extends GameManager {
-    private final float FALLING_HEART_SPEED = 100;
-    private final float FALLING_HEART_SIZE = 30;
     private final String PUCK_TAG = "puck";
+    private final String MAIN_PADDLE_TAG = "main paddle";
     private final String MAIN_BALL_TAG = "main ball";
     private final String FALLING_HEART_TAG = "falling heart";
+    private final String WALLS_TAG = "";
     private final int WALL_THICKNESS = 2;
     private final int MAX_HITS_BEFORE_CAMERA = 4;
     private final int BALL_SPEED = 250;
@@ -34,9 +37,11 @@ public class BrickerGameManager extends GameManager {
     private final int PADDLE_SPEED = 300;
     private final int BALLS_LAYER = Layer.DEFAULT;
     private final int PADDLE_LAYER = 50;
+    private final float BALL_INITIAL_RELATIVE_TO_SCREEN = 0.5f;
     private final int BRICKS_LAYER = Layer.STATIC_OBJECTS;
     private final int HEARTS_LAYER = -50;
-    private final String WALLS_TAG = "";
+    private final float FALLING_HEART_SPEED = 100;
+    private final float FALLING_HEART_SIZE = 30;
     private final int MAX_HEARTS = 4;
     private final int INITIAL_HEARTS = 3;
     private int currentHearts = INITIAL_HEARTS;
@@ -48,7 +53,7 @@ public class BrickerGameManager extends GameManager {
     private UserInputListener inputListener;
     private int ballCollisionCounter;
     private Ball mainBall;
-    public boolean extraPaddle = false;
+    private boolean extraPaddle = false;
     private Graphics graphics;
     private UserInputListener userInputListener;
     
@@ -90,8 +95,8 @@ public class BrickerGameManager extends GameManager {
         }
 
         // check if magic key "W" is pressed
-        if (userInputListener != null && userInputListener.wasKeyPressedThisFrame(
-                KeyEvent.getExtendedKeyCodeForChar('w'))){
+        if (userInputListener != null &&
+                userInputListener.wasKeyPressedThisFrame(KeyEvent.getExtendedKeyCodeForChar('w'))){
             boolean playAgain = graphics.showGameWonScreenAndReturnValue();
             restartGameOrExit(playAgain);
         }
@@ -109,10 +114,9 @@ public class BrickerGameManager extends GameManager {
         this.windowController = windowController;
         this.userInputListener = inputListener;
         //paddle
-        Paddle paddle = initializePaddle(
-                new Vector2(
-                        windowDimensions.x() * 0.5f,
-                windowDimensions.y() - 30));
+        initializePaddle(new Vector2(
+                windowDimensions.x() * 0.5f,
+                windowDimensions.y() - 30)).setTag(MAIN_PADDLE_TAG);
 
 
         // initialize the walls colliders
@@ -125,7 +129,7 @@ public class BrickerGameManager extends GameManager {
         initializeBricks(numberOfRows, bricksPerRow);
 
         Ball ball = initializeBall();
-        ball.setCenter(windowDimensions.mult(0.5f));
+        ball.setCenter(windowDimensions.mult(BALL_INITIAL_RELATIVE_TO_SCREEN));
         setObjectVelocityRandomDiagonal(ball, BALL_SPEED);
         mainBall = ball;
 
@@ -137,7 +141,6 @@ public class BrickerGameManager extends GameManager {
         // initialize graphics - hearts!
         graphics = new Graphics(windowController, imageSoundFactory, gameObjects());
         graphics.initializeLifeCounter(MAX_HEARTS, INITIAL_HEARTS);
-
         currentHearts = INITIAL_HEARTS;
     }
     
