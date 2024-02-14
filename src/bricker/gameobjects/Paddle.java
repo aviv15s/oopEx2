@@ -62,7 +62,7 @@ public class Paddle  extends GameObject {
            gameManager.removeGameObject(this, gameManager.getPaddleLayer());
            gameManager.setExtraPaddle(false);
         }
-        if (other.getTag().equals(gameManager.getHeartsTag())){
+        if (other.getTag().equals(gameManager.getHeartsTag()) || !this.getTag().equals(ANOTHER_PADDLE_TAG)){
             gameManager.onPaddleHitHeart(other);
         }
     }

@@ -80,6 +80,15 @@ public class BrickerGameManager extends GameManager {
             }
         }
 
+        // check if need to remove hearts
+        for (GameObject gameObject: gameObjects().objectsInLayer(HEARTS_LAYER)){
+            if (gameObject.getTag() == FALLING_HEART_TAG){
+                if (gameObject.getTopLeftCorner().y() >= windowDimensions.y()){
+                    gameObjects().removeGameObject(gameObject, HEARTS_LAYER);
+                }
+            }
+        }
+
         // check if magic key "W" is pressed
         if (userInputListener != null && userInputListener.wasKeyPressedThisFrame(
                 KeyEvent.getExtendedKeyCodeForChar('w'))){
