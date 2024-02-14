@@ -6,13 +6,13 @@ package bricker.main;
  */
 public enum ImageType {
     /**
-     * enums list
+     * enums image list
      */
 
-    BALL,
-    PUCK,
-    PADDLE,
-    BRICK,
-    BACKGROUND,
-    HEART
+    BALL,/** BALL enum*/
+    PUCK,/** PUCK enum*/
+    PADDLE,/** PADDLE enum*/
+    BRICK,/** BRICK enum*/
+    BACKGROUND,/** BACKGROUND enum*/
+    HEART /** HEART enum*/
 }
