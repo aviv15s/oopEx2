@@ -24,7 +24,7 @@ public class FallingHeart extends GameObject {
 
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
-        if (other.getTag().equals(brickerGameManager.getPaddleTag())){
+        if (other.getTag().equals(brickerGameManager.getMainPaddleTag())){
             brickerGameManager.onPaddleHitHeart(this);
         }
     }

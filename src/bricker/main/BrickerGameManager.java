@@ -244,10 +244,11 @@ public class BrickerGameManager extends GameManager {
 
     public void createFallingHeartObject(Vector2 center){
         Renderable heartImage = imageSoundFactory.getImageObject(ImageType.HEART);
-        GameObject heartObject = new GameObject(
+        GameObject heartObject = new FallingHeart(
                 Vector2.ZERO,
                 Vector2.ONES.mult(FALLING_HEART_SIZE),
-                heartImage);
+                heartImage,
+                this);
         heartObject.setCenter(center);
         heartObject.setVelocity(Vector2.DOWN.mult(FALLING_HEART_SPEED));
         heartObject.setTag(FALLING_HEART_TAG);
@@ -379,7 +380,7 @@ public class BrickerGameManager extends GameManager {
     }
 
 
-    public String getPaddleTag() {
+    public String getMainPaddleTag() {
         return MAIN_PADDLE_TAG;
     }
 }
