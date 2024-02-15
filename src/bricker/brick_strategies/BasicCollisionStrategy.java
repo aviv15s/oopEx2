@@ -1,22 +1,17 @@
 package bricker.brick_strategies;
 
 import danogl.GameObject;
-import danogl.collisions.Layer;
-import bricker.main.BrickerGameManager;
 
 /**
  * Strategy of brick when getting hit. In this case it supposed to do nothing
  * @author aviv.shemesh, ram3108_
  */
 public class BasicCollisionStrategy implements CollisionStrategy{
-    private BrickerGameManager gameManager;
 
     /**
-     *
-     * @param gameManager
+     * a basic constructor
      */
-    public BasicCollisionStrategy(BrickerGameManager gameManager){
-        this.gameManager = gameManager;
+    public BasicCollisionStrategy(){
     }
 
     /**

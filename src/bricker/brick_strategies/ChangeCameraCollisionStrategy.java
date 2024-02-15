@@ -1,10 +1,7 @@
 package bricker.brick_strategies;
 
-import bricker.gameobjects.Ball;
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
-import danogl.gui.rendering.Camera;
-import danogl.util.Vector2;
 /**
  * Strategy of brick when getting hit. In this case it supposed to follow ball with Camera.
  * @author aviv.shemesh, ram3108_

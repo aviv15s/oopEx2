@@ -91,7 +91,7 @@ public class CollisionStrategyFactory {
                 arrCollisionStrategy[index] = new LifeRecoveryCollisionStrategy(gameManager);
                 break;
             default:
-                arrCollisionStrategy[index] = new BasicCollisionStrategy(gameManager);
+                arrCollisionStrategy[index] = new BasicCollisionStrategy();
                 break;
         }
     }

@@ -1,7 +1,7 @@
 package bricker.main;
 
 import bricker.gameobjects.*;
-import danogl.GameManager;//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
@@ -12,8 +12,6 @@ import danogl.gui.rendering.Camera;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
-import bricker.brick_strategies.BasicCollisionStrategy;
-import bricker.brick_strategies.CollisionStrategy;
 
 import java.awt.event.KeyEvent;
 import java.util.Random;
@@ -24,6 +22,8 @@ import java.util.Random;
  * @author aviv.shemesh, ram3108_
  */
 public class BrickerGameManager extends GameManager {
+    private static final int DEFAULT_BRICKS_PER_ROW = 8;
+    private static final int DEFAULT_NUMBER_OF_ROWS = 7;
     private final String PUCK_TAG = "puck";
     private final String MAIN_PADDLE_TAG = "main paddle";
     private final String ANOTHER_PADDLE_TAG = "another paddle";
@@ -38,9 +38,9 @@ public class BrickerGameManager extends GameManager {
     private final int MAX_HITS_BEFORE_CAMERA = 4;
     private final float BALL_INITIAL_RELATIVE_TO_SCREEN = 0.5f;
     private final int BALL_SPEED = 250;
-    private final Vector2 BALL_SIZE = new Vector2(50, 50);
+    private final Vector2 BALL_SIZE = new Vector2(20, 20);
     private final Vector2 PUCK_SIZE = BALL_SIZE.mult(0.75f);
-    private final Vector2 PADDLE_SIZE = new Vector2(200, 20);
+    private final Vector2 PADDLE_SIZE = new Vector2(100, 15);
     private final int PADDLE_SPEED = 300;
     private final float FALLING_HEART_SPEED = 100;
     private final float FALLING_HEART_SIZE = 30;
@@ -60,6 +60,7 @@ public class BrickerGameManager extends GameManager {
     private boolean extraPaddle = false;
     private Graphics graphics;
     private UserInputListener userInputListener;
+    private final float brickHeight = 15;
 
     /**
      * Constructor for BrickerGameManager class.
@@ -149,10 +150,13 @@ public class BrickerGameManager extends GameManager {
         this.ballCollisionCounter = 0;
         this.windowController = windowController;
         this.userInputListener = inputListener;
+
+        float widthFactor = 0.5f;
+        float heightFactor = 30;
         //paddle
         Paddle mainPaddle = initializePaddle(new Vector2(
-                windowDimensions.x() * 0.5f,
-                windowDimensions.y() - 30));
+                windowDimensions.x() * widthFactor,
+                windowDimensions.y() - heightFactor));
         mainPaddle.setTag(MAIN_PADDLE_TAG);
 
 
@@ -229,7 +233,6 @@ public class BrickerGameManager extends GameManager {
         bricksRemaining = new Counter(numberOfRows * bricksPerRow);
         Renderable brickImage = imageSoundFactory.getImageObject(ImageType.BRICK);
         int brickWidth = (int) windowDimensions.x() / bricksPerRow;
-        int brickHeight = 15;
 
         for (int i = 0; i < numberOfRows; i++) {
             for (int j = 0; j < bricksPerRow; j++) {
@@ -281,7 +284,7 @@ public class BrickerGameManager extends GameManager {
      */
     private void setObjectVelocityRandomDiagonal(GameObject object, float speed) {
         Random random = new Random();
-        float speedOnEachAxis = speed / (float) Math.sqrt(2);
+        float speedOnEachAxis = speed / (float) Math.sqrt(2); // pythagoras!
         float velX = speedOnEachAxis, velY = speedOnEachAxis;
         if (random.nextBoolean()) {
             velX *= -1;
@@ -305,7 +308,7 @@ public class BrickerGameManager extends GameManager {
     /**
      * This method add heart to user if num hearts is less than MAX_HEARTS.
      */
-    public void addHearts(){
+    private void addHearts(){
         this.currentHearts++;
         if (this.currentHearts > MAX_HEARTS){
             this.currentHearts = MAX_HEARTS;
@@ -335,7 +338,7 @@ public class BrickerGameManager extends GameManager {
      * MIN_NUM_HEARTS, asks if to play again or quit.
      * Update the graphic accordingly.
      */
-    public void decreaseHearts(){
+    private void decreaseHearts(){
         this.currentHearts--;
         if (this.currentHearts <= MIN_NUM_HEARTS){
             boolean playAgain = graphics.showGameOverScreenAndReturnValue();
@@ -442,15 +445,16 @@ public class BrickerGameManager extends GameManager {
      * @param args argument given from the terminal.
      */
     public static void main(String[] args) {
-        int numberOfRows = 7, bricksPerRow = 8;
-        if (args.length >= 1) {
+        int bricksPerRow = DEFAULT_BRICKS_PER_ROW, numberOfRows = DEFAULT_NUMBER_OF_ROWS;
+        if (args.length == 2) {
             bricksPerRow = Integer.parseInt(args[0]);
-        }
-        if (args.length >= 2) {
             numberOfRows = Integer.parseInt(args[1]);
+
         }
-        BrickerGameManager brickerGameManager = new BrickerGameManager("Bouncing Ball",
+        String windowName = "Bricker";
+        BrickerGameManager brickerGameManager = new BrickerGameManager(windowName,
                 new Vector2(700, 500), numberOfRows, bricksPerRow);
+
         brickerGameManager.run();
     }
 

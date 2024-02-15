@@ -1,8 +1,6 @@
 package bricker.brick_strategies;
 
-import bricker.gameobjects.Brick;
 import bricker.main.BrickerGameManager;
-import bricker.main.ImageSoundFactory;
 import danogl.GameObject;
 
 /**

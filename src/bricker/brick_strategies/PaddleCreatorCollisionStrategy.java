@@ -1,8 +1,6 @@
 package bricker.brick_strategies;
 
-import bricker.gameobjects.Paddle;
 import bricker.main.BrickerGameManager;
-import danogl.GameManager;
 import danogl.GameObject;
 import danogl.util.Vector2;
 
